@@ -80,6 +80,7 @@ public class TcpServer
                 }
                 catch
                 {
+                    // [M34] JSON malformado recebe ERROR em vez de derrubar o servidor.
                     await SendError(writer, "JSON inválido.");
                     continue;
                 }
@@ -240,6 +241,7 @@ public class TcpServer
 
         state.ActiveQuestion = null;
         state.QuestionStartedAt = null;
+        // [M34] Limpar a pergunta ativa impede repetir a mesma resposta e duplicar score.
 
         return Task.FromResult(CreateJson("ANSWER_RESULT", new Dictionary<string, object>
         {

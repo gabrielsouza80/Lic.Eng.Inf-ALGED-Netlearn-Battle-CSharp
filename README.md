@@ -1,18 +1,66 @@
-# NetLearn Battle — Versão C#
+# NetLearn Battle — C# / ASP.NET Core
 
-Migração do projeto NetLearn Battle de Python/Flask para C# com ASP.NET Core Razor Pages.
+Projeto académico de Redes e Algoritmos feito em **C#**, com **ASP.NET Core Razor Pages** e persistência em **JSON**.
 
-## Como executar
+O NetLearn Battle é um jogo educativo. O aluno cria conta, faz login, escolhe um nível, responde perguntas de redes e acompanha score, histórico, estatísticas e ranking.
 
-Requisitos: [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
+## 1. O que o projeto faz
 
-### Web
+- Registo, login e logout.
+- Dashboard do aluno.
+- Jogo com sessão de 5 perguntas.
+- Perguntas de IPv4, IPv6 e ACL.
+- Feedback imediato após cada resposta.
+- Score por nível.
+- Histórico de tentativas.
+- Estatísticas do aluno.
+- Ranking Top 5.
+- Área do professor com estatísticas globais.
+- Demonstração TCP cliente-servidor.
+- Testes xUnit e Robot Framework.
+- RobotMCP opcional para validação.
+- Comando seguro para limpar dados locais.
+
+## 2. Tecnologias usadas
+
+- **C# / .NET 8**
+- **ASP.NET Core Razor Pages**
+- **JSON** para persistência
+- **xUnit** para testes unitários
+- **Robot Framework + Selenium** para testes no navegador
+- **TCP sockets** para demonstração cliente-servidor
+
+## 3. Como executar
+
+### Aplicação web
 
 ```powershell
 dotnet run
 ```
 
-Abrir `http://localhost:5002` no navegador.
+Abrir no navegador:
+
+```text
+http://localhost:5002
+```
+
+### Build
+
+```powershell
+dotnet build
+```
+
+### Testes xUnit
+
+```powershell
+dotnet test
+```
+
+### Testes Robot
+
+```powershell
+robot --outputdir Tests/Robot/results Tests/Robot
+```
 
 ### TCP Server
 
@@ -26,327 +74,207 @@ dotnet run -- tcp-server --host 127.0.0.1 --port 5001
 dotnet run -- tcp-client --host 127.0.0.1 --port 5001
 ```
 
-### Build
-
-```powershell
-dotnet build
-```
-
 ### Reset de dados locais
 
 ```powershell
 dotnet run -- reset-data
 ```
 
-## Estrutura do projeto
+Este comando apaga apenas dados locais gerados pela aplicação. Não apaga perguntas, ACLs nem exemplos.
 
-```
-├── Models/             # Modelos (User, Question, Attempt, etc.)
-├── Services/           # Lógica (JsonService, AuthService, ScoreService, IpService, AclService, StatsService)
-├── Data/               # Ficheiros JSON
-│   ├── acls.json
-│   ├── questions.json
-│   └── examples/       # Modelos de dados (versionados)
-├── Pages/              # Razor Pages
-├── wwwroot/css/        # Estilos
-├── Network/            # Demonstração TCP (TcpServer, TcpClientDemo, TcpMessage)
-├── Program.cs          # Ponto de entrada
-├── NetLearnBattle.CSharp.csproj
-├── README.md
-├── .gitignore
-└── Tests/              # Testes
-    ├── *Tests.cs           # Testes xUnit isolados
-    ├── TestHelpers.cs      # Criação de dados temporários
-    ├── NetLearnBattle.CSharp.Tests.csproj
-    └── Robot/              # Testes funcionais Robot Framework
-        ├── resources/
-        │   └── csharp_common.resource
-        ├── *.robot
-        └── results/
+## 4. Estrutura do projeto
+
+```text
+Models/        Dados do sistema: User, Question, Attempt, GameSession
+Services/      Lógica principal: jogo, login, JSON, score, IP, ACL, stats
+Pages/         Páginas Razor da aplicação web
+Network/       TCP Server, TCP Client e mensagens JSON
+Data/          Ficheiros JSON
+Tests/         Testes xUnit e Robot Framework
+tools/         RobotMCP opcional
+wwwroot/       CSS e ficheiros estáticos
+Program.cs     Ponto de entrada da aplicação
 ```
 
-## Ficheiros de dados
+## 5. Como funciona o jogo
 
-- `Data/questions.json` — perguntas de exemplo para os níveis 1 a 4
-- `Data/acls.json` — cenários de ACL para o nível 5
-- `Data/examples/` — modelos da estrutura esperada dos JSONs locais
-- `Data/users.json`, `Data/scores.json`, `Data/attempts.json` — dados locais gerados pela aplicação, ignorados pelo Git
+1. O aluno faz login.
+2. Escolhe um nível.
+3. O sistema cria uma sessão com 5 perguntas.
+4. As perguntas ficam numa `Queue`, ou seja, uma fila FIFO.
+5. O aluno responde uma pergunta.
+6. O sistema corrige no servidor.
+7. O score é atualizado.
+8. A tentativa é guardada em JSON.
+9. No fim aparece o resumo da sessão.
 
-## Reset de dados locais
+O `CorrectIndex` é usado internamente para corrigir a pergunta e não deve aparecer antes da resposta.
 
-O projeto usa JSON como persistência académica. A aplicação web, o TCP e o
-RobotMCP Explorer podem gerar dados locais durante testes e demonstrações.
+## 6. Níveis
 
-Esses dados ficam em:
+| Nível | Tema | Pontuação |
+|---|---|---|
+| 1 | IPv4 básico: /8, /16, /24 | +10 / -5 |
+| 2 | Sub-redes IPv4: /25, /26, /27 | +20 / -10 |
+| 3 | Super-redes IPv4: /21, /22, /23 | +30 / -15 |
+| 4 | IPv6: rede, segmento, sub-redes e conceito de broadcast | +40 / -20 |
+| 5 | ACL: permit/deny, first match, ordem, ACE e servidor | +50 / -25 |
 
-* `Data/users.json`
-* `Data/scores.json`
-* `Data/attempts.json`
-* `Data/sessions.json`
+## 7. JSON
 
-Estes ficheiros estão ignorados no Git e não entram no ZIP baixado pelo GitHub.
+O projeto não usa base de dados. A persistência é feita com ficheiros JSON.
 
-Para limpar os dados locais:
+Ficheiros fixos que ficam no projeto:
 
-```powershell
-dotnet run -- reset-data
-```
+- `Data/questions.json`
+- `Data/acls.json`
+- `Data/examples/`
 
-O reset não apaga:
+Ficheiros locais gerados durante uso, testes ou TCP:
 
-* `Data/questions.json`
-* `Data/acls.json`
-* `Data/examples/`
+- `Data/users.json`
+- `Data/scores.json`
+- `Data/attempts.json`
+- `Data/sessions.json`
+- `Data/*.tmp`
 
-## Funcionalidades implementadas
+Os ficheiros locais estão no `.gitignore` e não devem ir para o GitHub.
 
-### Fase 1 — Autenticação e base
+## 8. Autenticação
 
-- Registo de conta com hash SHA-256 + salt
-- Login e logout com sessão
-- Dashboard com score atual
-- Persistência em JSON
+O sistema não guarda passwords em texto simples.
 
-### Fase 2 — Jogo web com sessão de 5 perguntas
+No registo:
 
-- Escolha de nível (1 a 5)
-- Sessão de jogo com 5 perguntas usando Queue FIFO
-- A primeira pergunta inserida na Queue é a primeira apresentada ao aluno
-- Feedback imediato (correto/errado) com pontos
-- Resumo da sessão com total de certas, erradas e pontos
-- Tentativas guardadas em `Data/attempts.json`
-- Histórico de tentativas por utilizador
-- Pontuação por nível (nível 1: +10/-5, nível 2: +20/-10, etc.)
+- cria um `salt`;
+- calcula hash SHA-256;
+- guarda apenas `username`, `salt` e `hash`.
 
-### Fase 3 — Motores reais de IPv4, IPv6 e ACL (concluída)
+No login:
 
-- **IpService** — motor de IPv4 e IPv6 com geração dinâmica de perguntas
-- **AclService** — motor de ACL com avaliação de regras por ordem
-- Perguntas geradas dinamicamente, não fixas
-- Níveis 1 a 5 com pontuação real
-- **Correção:** `CalculateIpv4Broadcast` — cast para `(byte)` no cálculo bitwise para evitar resultados incorretos em prefixos não alinhados a 8 bits (ex: /25, /26, /27, /21, /22, /23)
+- recalcula o hash da password digitada;
+- compara com o hash guardado.
 
-## Níveis de jogo
+## 9. Estatísticas e ranking
 
-| Nível | Tópico | Pontuação |
-|-------|--------|-----------|
-| 1 | IPv4 básico (/8, /16, /24) | +10 / -5 |
-| 2 | Sub-redes IPv4 (/25, /26, /27) | +20 / -10 |
-| 3 | Super-redes IPv4 (/21, /22, /23) | +30 / -15 |
-| 4 | IPv6 (Network ID, mesmo segmento, sub-redes, conceitos) | +40 / -20 |
-| 5 | ACLs (permit/deny, primeira regra, ordenação, ACE e servidor) | +50 / -25 |
+O aluno pode ver:
 
-## Motores implementados
+- total de perguntas;
+- certas e erradas;
+- taxa de acerto;
+- taxa por nível;
+- taxa por tópico;
+- média, mediana e moda do tempo;
+- evolução do score por sessão.
 
-### IPv4 (IpService)
+O professor pode ver:
 
-O motor IPv4 gera perguntas de:
+- ranking Top 5;
+- estatísticas globais;
+- taxa por nível;
+- taxa por tópico;
+- quartis dos scores;
+- tentativas recentes.
 
-- **Network ID** — calcular o endereço de rede a partir de um IP e prefixo
-- **Broadcast** — calcular o endereço de broadcast
-- **Mesmo segmento** — determinar se dois IPs estão na mesma rede
+A página Teacher é pública nesta versão académica para facilitar a demonstração.
 
-Usa `System.Net.IPAddress` e operações bitwise para calcular máscaras, network IDs e broadcasts.
+## 10. TCP
 
-Redes privadas usadas: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16.
+O TCP é uma demonstração simples cliente-servidor.
 
-### IPv6 (IpService)
+Mensagens principais:
 
-O motor IPv6 gera perguntas de:
+- `AUTH_REQUEST`
+- `AUTH_RESPONSE`
+- `QUESTION_REQUEST`
+- `QUESTION_PUSH`
+- `ANSWER_SUBMIT`
+- `ANSWER_RESULT`
+- `SCORE_UPDATE`
+- `RANKING_REQUEST`
+- `RANKING_RESPONSE`
+- `STATS_REQUEST`
+- `STATS_RESPONSE`
+- `END_SESSION`
+- `ERROR`
 
-- **Network ID IPv6** — calcular o prefixo de rede
-- **Mesmo segmento IPv6** — comparar dois endereços IPv6
-- **Sub-redes IPv6** — calcular sub-rede com prefixo maior
-- **Conceito de broadcast** — pergunta conceptual sobre broadcast em IPv6
+O servidor TCP reutiliza serviços reais do projeto. Por isso pode gerar scores e tentativas locais.
 
-**Nota importante:** IPv6 não tem broadcast tradicional como IPv4. O projeto trata esse caso como conceito, explicando que "IPv6 não usa broadcast tradicional".
+## 11. Testes
 
-### ACL (AclService)
+O projeto tem:
 
-O motor ACL:
+- **106 testes xUnit** para serviços, jogo, IPv4, IPv6, ACL, estatísticas, TCP e reset.
+- **10 testes Robot** para fluxos reais no navegador.
 
-- Percorre as regras por ordem
-- Aplica a primeira regra compatível (first-match)
-- Se nenhuma regra combinar, devolve "deny" (comportamento padrão)
-- Protocolo "any" ou "ip" combina com qualquer protocolo IP
-- Source/Destination "any" combina com qualquer IP
-- Suporta notação CIDR para IPs (ex: 192.168.1.0/24)
+Os testes Robot cobrem:
 
-O nível 5 alterna cinco tipos de perguntas: `permit/deny`, primeira regra
-compatível, ordenação de regras, ACE em falta e ACL para servidor. Uma sessão
-de cinco perguntas apresenta os cinco tipos, o que facilita a demonstração
-académica.
+- registo;
+- login;
+- páginas protegidas;
+- sessão de 5 perguntas;
+- histórico;
+- estatísticas;
+- ranking;
+- área Teacher;
+- persistência.
 
-### Fase 4 — Estatísticas e ranking (concluída)
+Pré-requisitos Robot:
 
-- **StatsService** — serviço de estatísticas do aluno e do professor
-- **Página Stats** — estatísticas do aluno autenticado:
-  - Score atual, total de perguntas, certas, erradas, taxa de acerto
-  - Taxa por nível e por tópico
-  - Média, mediana e moda do tempo de resposta
-  - Tópico onde mais falha (mínimo 5 tentativas)
-  - Evolução do score por sessão
-- **Página Ranking** — Top 5 público (ordenado por score decrescente)
-- **Página Teacher** — estatísticas globais públicas:
-  - Totais globais, taxa global
-  - Taxa por nível e por tópico
-  - Distribuição de scores (quartis: min, Q1, mediana, Q3, max)
-  - Tentativas recentes (últimas 20)
-  - Ranking Top 5
-  - Nota académica sobre a área ser pública
-- **Dashboard** atualizado com links para Estatísticas, Ranking e Professor
-- Robusto com JSON vazio — mostra mensagens amigáveis
-- Tempo de resposta calculado no servidor entre a apresentação e a resposta
-- Evolução de score agregada por sessão: nível, perguntas, certas, erradas,
-  pontos da sessão e score final
+- Python 3;
+- Robot Framework;
+- SeleniumLibrary;
+- Google Chrome instalado;
+- Selenium Manager ou ChromeDriver compatível.
 
-### Testes Robot Framework da versão C#
-
-Testes funcionais com Robot Framework + Selenium que validam a aplicação web C# em cenários reais:
-
-- `Tests/Robot/web_csharp_e2e.robot` — fluxo completo: registo, login, jogar, histórico, estatísticas, ranking, teacher, logout
-- `Tests/Robot/web_csharp_session.robot` — sessão de 5 perguntas com resumo
-- `Tests/Robot/web_csharp_invalids.robot` — páginas protegidas, login errado, páginas públicas
-- `Tests/Robot/web_csharp_persistence.robot` — dados mantêm-se entre sessões
-
-Os testes:
-- Usam porta **5012** (não conflitua com a app normal na porta 5002)
-- Iniciam a aplicação C# automaticamente com `dotnet run --urls http://127.0.0.1:5012`
-- Usam `resources/csharp_common.resource` com keywords partilhadas
-- Guardam logs em `Tests/Robot/results/`
-
-Pré-requisitos:
-- Python 3 com Robot Framework e SeleniumLibrary instalados
-- Google Chrome instalado; Selenium Manager/ChromeDriver compatível
+Instalação:
 
 ```powershell
 pip install robotframework selenium robotframework-seleniumlibrary
 ```
 
-Executar todos os testes:
-```powershell
-robot --outputdir Tests/Robot/results Tests/Robot
-```
+## 12. RobotMCP opcional
 
-### Fase 6 — Testes unitários (concluída)
-
-- Projeto de testes: `Tests/` (xUnit)
-- Framework: **xUnit** com `Microsoft.NET.Test.Sdk`
-- 106 testes distribuídos por 9 ficheiros, cobrindo todos os serviços:
-
-| Ficheiro | Testes | Cobertura |
-|----------|--------|-----------|
-| `JsonServiceTests.cs` | 8 | Load/Save, ficheiro inexistente, ficheiro vazio, JSON malformado, round-trip |
-| `AuthServiceTests.cs` | 9 | Registo, login, hash, salt, duplicados |
-| `ScoreServiceTests.cs` | 8 | Pontuação, ranking Top 5, sem dados sensíveis |
-| `GameServiceTests.cs` | 12 | Sessão 5 perguntas, Queue, níveis, pontos, tentativas, selectedIndex inválido |
-| `IpServiceTests.cs` | 25 | IPv4 Network ID, Broadcast, SameNetwork, geração; IPv6 |
-| `AclServiceTests.cs` | 13 | RuleMatches, EvaluateAcl, geração 5 tipos |
-| `StatsServiceTests.cs` | 13 | Aluno, professor, quartis, vazio, tempos |
-| `TcpHandlerTests.cs` | 13 | Mensagens TCP, autenticação, resposta repetida e erros |
-| `DataResetServiceTests.cs` | 3 | Reset seguro de dados locais |
-
-Isolamento:
-- Todos os testes usam pastas temporárias (`Path.GetTempPath`)
-- `JsonService` aceita `basePath` opcional para testes sem `IWebHostEnvironment`
-- Nenhum teste altera `Data/*.json` real
-
-Executar:
-```powershell
-dotnet test
-```
-ou:
-```powershell
-dotnet test Tests/NetLearnBattle.CSharp.Tests.csproj
-```
-
-### Fase 5 — Demonstração TCP cliente-servidor (concluída)
-
-- Servidor TCP (`Network/TcpServer.cs`) — aceita um cliente de cada vez e responde a mensagens JSON:
-  - **AUTH_REQUEST** → AUTH_RESPONSE (autenticação do cliente)
-  - **QUESTION_REQUEST** → QUESTION_PUSH (devolve pergunta sem CorrectIndex)
-  - **ANSWER_SUBMIT** → ANSWER_RESULT (corrige resposta, atualiza score)
-  - **SCORE_UPDATE** → SCORE_UPDATE (score atual do cliente)
-  - **RANKING_REQUEST** → RANKING_RESPONSE (top 5)
-  - **STATS_REQUEST** → STATS_RESPONSE (estatísticas do cliente)
-  - **END_SESSION** → END_SESSION (fim da sessão)
-  - **ERROR** → mensagem de erro genérico
-- Cliente TCP (`Network/TcpClientDemo.cs`) — demonstrador interativo no terminal com fluxo completo: autenticação → pergunta → resposta → score → ranking → estatísticas → fim
-- Tipos de mensagem (`Network/TcpMessage.cs`) — modelo com `Type` e suporte para campos extra via `JsonExtensionData`
-- Suporta três modos de execução:
-  ```powershell
-  dotnet run                          # Aplicação web (porta 5002)
-  dotnet run -- tcp-server --host 127.0.0.1 --port 5001
-  dotnet run -- tcp-client --host 127.0.0.1 --port 5001
-  dotnet run -- reset-data
-  ```
-- O servidor TCP reutiliza o WebApplication builder para aceder aos serviços configurados (JsonService com ContentRootPath correto), evitando um DummyEnvironment frágil
-- **Nota:** O servidor TCP não expõe o CorrectIndex da pergunta, mantendo a integridade académica do jogo
-
-## Páginas da aplicação
-
-| Rota | Página | Autenticação |
-|------|--------|-------------|
-| `/` | Home | Pública |
-| `/Register` | Registo | Pública |
-| `/Login` | Login | Pública |
-| `/Dashboard` | Dashboard do aluno | Requer login |
-| `/Play` | Jogo (escolher nível e responder) | Requer login |
-| `/Result` | Resultado da pergunta | Requer login |
-| `/Summary` | Resumo da sessão | Requer login |
-| `/History` | Histórico de tentativas | Requer login |
-| `/Stats` | Estatísticas do aluno | Requer login |
-| `/Ranking` | Ranking Top 5 | Pública |
-| `/Teacher` | Área do professor (estatísticas globais) | Pública |
-
-## Limitações académicas
-
-- O TCP é uma demonstração simples e atende um cliente de cada vez.
-- A persistência usa JSON; uma base de dados seria mais adequada em produção.
-- O hash com salt é adequado para o âmbito académico, não para segurança profissional.
-- A área do professor é pública nesta versão académica.
-
-## RobotMCP opcional
-
-A pasta `tools/robotmcp/` contém uma ferramenta auxiliar para executar build,
-testes xUnit e Robot Framework, gerando um relatório de avaliação em Markdown.
-
-Comando:
+O RobotMCP é uma ferramenta auxiliar. Ele executa build, xUnit, Robot e gera relatório.
 
 ```powershell
 python tools/robotmcp/robotmcp.py
 ```
 
-Também existe um modo de exploração segura:
+Também existe exploração segura com Selenium:
 
 ```powershell
 python tools/robotmcp/robotmcp.py --explore
 ```
 
-Este modo navega no site com Selenium, clica apenas em ações seguras e gera um
-relatório de possíveis buracos.
+ou:
 
-O relatório é gerado em:
-
-```text
-tools/robotmcp/output/robotmcp_report.md
+```powershell
+python tools/robotmcp/robotmcp.py --explorer
 ```
 
-Esta ferramenta não é necessária para executar a aplicação; serve apenas para
-apoio à validação antes da entrega.
+O RobotMCP não faz parte da lógica principal da aplicação.
 
-## Manual do Código
+## 13. Manual do código
 
-Este projeto inclui o ficheiro `MANUAL_DO_CODIGO.md`.
-Os comentários do código usam referências como `[M11]`, `[M15]` e `[M34]`,
-que apontam para explicações do manual.
+O ficheiro `MANUAL_DO_CODIGO.md` explica o projeto em linguagem simples.
 
-Exemplo:
+Os comentários no código usam referências como:
 
 ```csharp
-// [M15] Corrige a resposta e atualiza o score.
+// [M15] Corrige a resposta, atualiza score e guarda a tentativa.
 ```
 
-## Migração
+Essas referências apontam para secções do manual e ajudam na defesa oral.
 
-Esta versão replica a lógica do projeto original em Python/Flask, mantendo a mesma estrutura de dados JSON e o mesmo fluxo de autenticação, mas utilizando ASP.NET Core Razor Pages e C#.
+## 14. Limitações assumidas
+
+- JSON é adequado para o projeto académico, mas uma base de dados seria melhor em produção.
+- TCP é demonstrativo e simples.
+- A área Teacher é pública nesta versão.
+- Não há perfis avançados de permissões.
+- A interface é simples e minimalista.
+
+## 15. Como explicar em 1 minuto
+
+O NetLearn Battle é uma aplicação educativa em C# para treinar IPv4, IPv6 e ACLs. O aluno faz login, escolhe um nível e responde uma sessão de 5 perguntas organizadas numa Queue. O sistema corrige no servidor, atualiza score e guarda tentativas em JSON. Depois o aluno pode consultar histórico, estatísticas e ranking. O projeto também tem área Teacher, demonstração TCP, testes xUnit, testes Robot e reset seguro de dados locais.

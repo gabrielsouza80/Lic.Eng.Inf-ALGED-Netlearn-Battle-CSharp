@@ -141,6 +141,7 @@ public class IpService
 
     private (string ip, string network) GenerateRandomIpv4(int prefix)
     {
+        // [M46] Usa redes privadas para manter exemplos académicos e seguros.
         var networks = new List<string[]> {
             new[] { "10", "0", "0", "0" },
             new[] { "172", "16", "0", "0" },
@@ -529,6 +530,7 @@ public class IpService
 
     private Question MakeIpv6BroadcastConceptQuestion(int pc, int pw)
     {
+        // [M50] Esta pergunta evita dizer que IPv6 tem broadcast tradicional.
         var options = new List<string>
         {
             "IPv6 não usa broadcast tradicional.",

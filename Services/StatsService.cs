@@ -157,6 +157,7 @@ public class StatsService
 
     private static List<ScoreEvolution> CalculateScoreEvolution(List<Attempt> attempts)
     {
+        // [M18] Evolução junta tentativas por sessão para explicar progresso real.
         return attempts
             .GroupBy(a => string.IsNullOrWhiteSpace(a.SessionId)
                 ? $"tentativa-{a.CreatedAt.Ticks}" : a.SessionId)

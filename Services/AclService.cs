@@ -70,6 +70,7 @@ public class AclService
 
     private Question GeneratePermitDenyQuestion(List<AclScenario> scenarios)
     {
+        // [M53] Pergunta mais simples: avaliar se o pacote é permitido ou negado.
         var scenario = GetScenario(scenarios);
         var evaluation = EvaluateAclDetails(scenario.Rules, scenario.Packet);
         var correct = string.Equals(evaluation.Action, "permit", StringComparison.OrdinalIgnoreCase)
@@ -85,6 +86,7 @@ public class AclService
 
     private Question GenerateFirstMatchQuestion(List<AclScenario> scenarios)
     {
+        // [M54] Mostra que a ordem da ACL importa porque só a primeira regra decide.
         var scenario = GetScenario(scenarios);
         var evaluation = EvaluateAclDetails(scenario.Rules, scenario.Packet);
         var options = scenario.Rules.Select((rule, index) =>
@@ -109,6 +111,7 @@ public class AclService
 
     private Question GenerateOrderQuestion()
     {
+        // [M54][M55] A regra específica deve vir antes do deny geral.
         const string permitHttp = "permit tcp any 192.168.1.10/32 port 80";
         const string denyAll = "deny ip any any";
         const string wrongPort = "permit tcp any 192.168.1.10/32 port 22";
@@ -131,6 +134,7 @@ public class AclService
 
     private Question GenerateMissingAceQuestion()
     {
+        // [M53] ACE em falta treina a escolha da regra correta para um objetivo.
         const string correct = "permit tcp any 192.168.1.10/32 port 80";
         var options = new List<string>
         {
@@ -149,6 +153,7 @@ public class AclService
 
     private Question GenerateServerAclQuestion()
     {
+        // [M53] Pergunta de desenho de ACL: permitir serviço e bloquear o resto.
         const string correct = "1. permit tcp any 192.168.1.10/32 port 80\n2. deny ip any any";
         var options = new List<string>
         {
@@ -184,6 +189,7 @@ public class AclService
 
     private static AclScenario GetScenario(List<AclScenario> scenarios)
     {
+        // [M11][M17] Se o JSON estiver vazio, usa um cenário simples de fallback.
         if (scenarios.Count > 0)
         {
             var scenario = scenarios[Rng.Next(scenarios.Count)] ?? new AclScenario();
@@ -232,6 +238,7 @@ public class AclService
 
     private static bool ProtocolMatches(string ruleProtocol, string packetProtocol)
     {
+        // [M17] "ip" e "any" são tratados como protocolos genéricos.
         var rule = (ruleProtocol ?? string.Empty).Trim().ToLowerInvariant();
         var packet = (packetProtocol ?? string.Empty).Trim().ToLowerInvariant();
         return rule is "any" or "ip" || rule == packet;
@@ -239,6 +246,7 @@ public class AclService
 
     private static bool IpMatches(string ruleIp, string packetIp)
     {
+        // [M17] "any" aceita qualquer IP; CIDR compara rede por máscara.
         ruleIp = (ruleIp ?? string.Empty).Trim().ToLowerInvariant();
 
         if (ruleIp == "any")
@@ -273,6 +281,7 @@ public class AclService
 
     private static bool PortMatches(string rulePort, int packetPort)
     {
+        // [M17] Porta vazia, 0 ou any significa qualquer porta.
         var port = (rulePort ?? string.Empty).Trim().ToLowerInvariant();
 
         if (port is "any" or "" or "0")

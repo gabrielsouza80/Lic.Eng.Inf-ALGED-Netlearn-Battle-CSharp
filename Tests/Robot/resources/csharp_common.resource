@@ -16,6 +16,7 @@ ${ACTIVE_USER}           ${EMPTY}
 ${CSPROJ_PROCESS}        ${EMPTY}
 
 *** Keywords ***
+# [M38] Keywords comuns evitam repetir arranque da app, login e validações.
 Iniciar Registo No Console
     Log To Console    \n========== [C# TESTE] ${TEST NAME} ==========
 

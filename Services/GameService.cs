@@ -83,11 +83,13 @@ public class GameService
 
         if (session.Questions.Count > 0)
         {
+            // [M44] Depois da resposta, a próxima pergunta sai da Queue.
             session.CurrentQuestion = session.Questions.Dequeue();
             session.QuestionStartedAt = DateTime.UtcNow;
         }
         else
         {
+            // [M27] Sem perguntas restantes, a sessão fica pronta para resumo.
             session.CurrentQuestion = null;
             session.QuestionStartedAt = null;
         }

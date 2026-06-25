@@ -89,6 +89,7 @@ public class PlayModel : PageModel
             if (!string.Equals(sessionIdStr, activeSessionId, StringComparison.Ordinal))
                 return RedirectToPage();
 
+            // [M14] Só o dono da sessão pode responder à pergunta ativa.
             var session = _store.GetSession(sessionIdStr);
             if (session == null || session.Username != username || session.CurrentQuestion == null)
                 return RedirectToPage();

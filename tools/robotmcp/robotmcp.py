@@ -794,7 +794,8 @@ def validate_project_layout(config, repo_root):
 def main():
     # [M39] Sem --explore mantém o comportamento normal do RobotMCP.
     parser = argparse.ArgumentParser(description="RobotMCP para o NetLearn Battle C#.")
-    parser.add_argument("--explore", action="store_true", help="Executa exploração segura com Selenium.")
+    # [M39] --explorer é alias para evitar erro quando o nome é escrito por extenso.
+    parser.add_argument("--explore", "--explorer", action="store_true", help="Executa exploração segura com Selenium.")
     args = parser.parse_args()
 
     tool_dir = Path(__file__).resolve().parent

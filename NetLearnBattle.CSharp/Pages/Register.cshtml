@@ -1,0 +1,30 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registar";
+}
+
+<h1>Criar Conta</h1>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert @(Model.IsSuccess ? "alert-success" : "alert-error")">
+        @Model.Message
+    </div>
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="username">Nome de utilizador</label>
+        <input type="text" id="username" name="Username" required />
+    </div>
+    <div class="form-group">
+        <label for="password">Palavra-passe</label>
+        <input type="password" id="password" name="Password" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Criar Conta</button>
+</form>
+
+<p class="form-footer">
+    Já tens conta? <a href="/Login">Entrar</a>
+</p>

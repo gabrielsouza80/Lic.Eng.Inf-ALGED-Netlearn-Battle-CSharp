@@ -1,0 +1,54 @@
+@page
+@model PlayModel
+@{
+    ViewData["Title"] = "Jogar";
+}
+
+@if (!Model.HasSession)
+{
+    <h1>Escolher Nível</h1>
+
+    <form method="post" class="play-level-form">
+        <p>Seleciona um nível para começar:</p>
+        <div class="levels">
+            @foreach (var level in Model.AvailableLevels)
+            {
+                <button type="submit" name="level" value="@level.Number" class="level-card">
+                    <h3>@level.Name</h3>
+                    <p>@level.Description</p>
+                    <span class="points">+@level.PointsCorrect / @level.PointsWrong</span>
+                </button>
+            }
+        </div>
+    </form>
+}
+else if (Model.CurrentQuestion != null)
+{
+    var q = Model.CurrentQuestion;
+    <h1>Nível @Model.Level</h1>
+    <p class="question-counter">Pergunta @Model.CurrentQuestionIndex de @Model.TotalQuestions</p>
+    <p class="question-topic">Tópico: @q.Topic</p>
+
+    <div class="question-card">
+        <p class="question-text">@q.QuestionText</p>
+
+        <form method="post">
+            <input type="hidden" name="sessionId" value="@Model.SessionId" />
+
+            <div class="options">
+                @for (int i = 0; i < q.Options.Count; i++)
+                {
+                    <button type="submit" name="selectedIndex" value="@i" class="option-btn">
+                        @q.Options[i]
+                    </button>
+                }
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    <h1>Sessão terminada</h1>
+    <p>Não há pergunta atual.</p>
+    <a href="/Summary" class="btn btn-primary">Ver Resumo</a>
+}

@@ -1,0 +1,40 @@
+@page
+@model ResultModel
+@{
+    ViewData["Title"] = "Resultado";
+}
+
+@if (Model.Attempt != null)
+{
+    <div class="result-card @(Model.Attempt.IsCorrect ? "result-correct" : "result-wrong")">
+        <h1>@(Model.Attempt.IsCorrect ? "Correto!" : "Errado!")</h1>
+
+        <div class="result-details">
+            <p><strong>Pergunta:</strong> @Model.Attempt.Question</p>
+            <p><strong>Tua resposta:</strong> @Model.Attempt.SelectedAnswer</p>
+            <p><strong>Resposta correta:</strong> @Model.Attempt.CorrectAnswer</p>
+            <p><strong>Pontos:</strong> <span class="@(Model.Attempt.Points >= 0 ? "positive" : "negative")">
+                @(Model.Attempt.Points >= 0 ? "+" : "")@Model.Attempt.Points
+            </span></p>
+            <p><strong>Score atual:</strong> @Model.Attempt.ScoreAfterAttempt</p>
+            <p><strong>Tempo de resposta:</strong> @Model.Attempt.ResponseTimeSeconds.ToString("F1") segundos</p>
+        </div>
+
+        <div class="result-actions">
+            @if (Model.HasNextQuestion)
+            {
+                <a href="/Play" class="btn btn-primary">Próxima Pergunta</a>
+            }
+            else
+            {
+                <a href="/Summary" class="btn btn-primary">Ver Resumo</a>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <h1>Sem resultado</h1>
+    <p>Não foi encontrado resultado para esta sessão.</p>
+    <a href="/Play" class="btn btn-primary">Jogar</a>
+}

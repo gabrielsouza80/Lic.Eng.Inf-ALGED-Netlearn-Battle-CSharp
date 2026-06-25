@@ -1,0 +1,25 @@
+@page
+@model DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+
+<p>Bem-vindo, <strong>@Model.Username</strong>!</p>
+
+<div class="dashboard-cards">
+    <div class="card">
+        <h3>Score Atual</h3>
+        <p class="card-value">@Model.Score</p>
+    </div>
+</div>
+
+<div class="dashboard-links">
+    <a href="/Play" class="btn btn-primary">Jogar</a>
+    <a href="/History" class="btn btn-secondary">Histórico</a>
+    <a href="/Stats" class="btn btn-secondary">Estatísticas</a>
+    <a href="/Ranking" class="btn btn-secondary">Ranking</a>
+    <a href="/Teacher" class="btn btn-secondary">Professor</a>
+    <a href="/Logout" class="btn btn-secondary">Sair</a>
+</div>

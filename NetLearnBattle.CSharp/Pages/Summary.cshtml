@@ -1,0 +1,73 @@
+@page
+@model SummaryModel
+@{
+    ViewData["Title"] = "Resumo da Sessão";
+}
+
+<h1>Resumo da Sessão</h1>
+
+@if (Model.Session != null)
+{
+    <div class="summary-stats">
+        <div class="stat-card">
+            <h3>Total</h3>
+            <p class="stat-value">@Model.Session.TotalQuestions</p>
+        </div>
+        <div class="stat-card">
+            <h3>Certas</h3>
+            <p class="stat-value correct">@Model.Session.CorrectAnswers</p>
+        </div>
+        <div class="stat-card">
+            <h3>Erradas</h3>
+            <p class="stat-value wrong">@Model.Session.WrongAnswers</p>
+        </div>
+        <div class="stat-card">
+            <h3>Pontos</h3>
+            <p class="stat-value">@Model.Session.PointsEarned</p>
+        </div>
+        <div class="stat-card">
+            <h3>Score Final</h3>
+            <p class="stat-value">@Model.FinalScore</p>
+        </div>
+    </div>
+
+    <h2>Tentativas</h2>
+    <table class="attempts-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nível</th>
+                <th>Pergunta</th>
+                <th>Resposta</th>
+                <th>Resultado</th>
+                <th>Pontos</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Session.Attempts.Count; i++)
+            {
+                var a = Model.Session.Attempts[i];
+                <tr class="@(a.IsCorrect ? "row-correct" : "row-wrong")">
+                    <td>@(i + 1)</td>
+                    <td>@a.Level</td>
+                    <td>@a.Question</td>
+                    <td>@a.SelectedAnswer</td>
+                    <td>@(a.IsCorrect ? "Correto" : "Errado")</td>
+                    <td class="@(a.Points >= 0 ? "positive" : "negative")">
+                        @(a.Points >= 0 ? "+" : "")@a.Points
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="summary-actions">
+        <a href="/Play" class="btn btn-primary">Jogar Novamente</a>
+        <a href="/Dashboard" class="btn btn-secondary">Dashboard</a>
+    </div>
+}
+else
+{
+    <p>Nenhuma sessão encontrada.</p>
+    <a href="/Play" class="btn btn-primary">Jogar</a>
+}

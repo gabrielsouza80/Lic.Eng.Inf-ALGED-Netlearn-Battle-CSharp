@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Servidor Web",
+    "question": "Um pacote TCP de 10.0.0.5 para 192.168.1.10 na porta 80 será permitido ou negado?",
+    "packet": {"src_ip": "10.0.0.5", "dst_ip": "192.168.1.10", "protocol": "tcp", "port": 80},
+    "rules": [
+      {"id": "R1", "action": "deny", "protocol": "tcp", "src": "any", "dst": "192.168.1.10/32", "port": 22, "description": "Negar SSH"},
+      {"id": "R2", "action": "permit", "protocol": "tcp", "src": "any", "dst": "192.168.1.10/32", "port": 80, "description": "Permitir HTTP"}
+    ],
+    "expected_action": "permit",
+    "explanation": "O pacote TCP na porta 80 corresponde à regra R2 (permit tcp any 192.168.1.10 port 80). A regra R1 nega SSH (porta 22), mas o pacote é HTTP (porta 80), por isso R2 é a primeira regra compatível."
+  },
+  {
+    "name": "Servidor DNS",
+    "question": "Um pacote UDP de 10.0.0.10 para 192.168.1.20 na porta 53 deve ser permitido por esta ACL?",
+    "packet": {"src_ip": "10.0.0.10", "dst_ip": "192.168.1.20", "protocol": "udp", "port": 53},
+    "rules": [
+      {"id": "R1", "action": "permit", "protocol": "udp", "src": "any", "dst": "192.168.1.20/32", "port": 53, "description": "Permitir DNS"},
+      {"id": "R2", "action": "deny", "protocol": "ip", "src": "any", "dst": "any", "port": "any", "description": "Negar todo o resto"}
+    ],
+    "expected_action": "permit",
+    "explanation": "O pacote UDP na porta 53 corresponde à regra R1 (permit udp any 192.168.1.20 port 53). Como é a primeira regra compatível, o pacote é permitido."
+  },
+  {
+    "name": "Acesso SSH",
+    "question": "Um pacote TCP de 10.0.0.99 para 10.0.0.1 na porta 22 corresponde a que regra?",
+    "packet": {"src_ip": "10.0.0.99", "dst_ip": "10.0.0.1", "protocol": "tcp", "port": 22},
+    "rules": [
+      {"id": "R1", "action": "permit", "protocol": "tcp", "src": "10.0.0.0/24", "dst": "10.0.0.1/32", "port": 22, "description": "Permitir SSH da rede local"},
+      {"id": "R2", "action": "deny", "protocol": "tcp", "src": "any", "dst": "10.0.0.0/24", "port": "any", "description": "Negar TCP para rede local"},
+      {"id": "R3", "action": "permit", "protocol": "ip", "src": "any", "dst": "any", "port": "any", "description": "Permitir todo o resto"}
+    ],
+    "expected_action": "permit",
+    "explanation": "O pacote TCP de 10.0.0.99 (rede 10.0.0.0/24) para 10.0.0.1 na porta 22 corresponde à regra R1 (permit tcp 10.0.0.0/24 10.0.0.1 port 22)."
+  },
+  {
+    "name": "Ping ICMP",
+    "question": "Um pacote ICMP de 172.16.0.5 para 10.0.0.1 deve ser permitido?",
+    "packet": {"src_ip": "172.16.0.5", "dst_ip": "10.0.0.1", "protocol": "icmp", "port": 0},
+    "rules": [
+      {"id": "R1", "action": "permit", "protocol": "icmp", "src": "any", "dst": "any", "port": "any", "description": "Permitir ICMP"},
+      {"id": "R2", "action": "deny", "protocol": "ip", "src": "any", "dst": "any", "port": "any", "description": "Negar todo o resto"}
+    ],
+    "expected_action": "permit",
+    "explanation": "O pacote ICMP corresponde à regra R1 (permit icmp any any). Como é a primeira regra compatível, é permitido."
+  },
+  {
+    "name": "Sem regra específica",
+    "question": "Um pacote TCP de 192.168.1.50 para 10.0.0.1 na porta 443 não corresponde a nenhuma regra específica. Qual é o comportamento da ACL?",
+    "packet": {"src_ip": "192.168.1.50", "dst_ip": "10.0.0.1", "protocol": "tcp", "port": 443},
+    "rules": [
+      {"id": "R1", "action": "permit", "protocol": "tcp", "src": "192.168.1.0/24", "dst": "10.0.0.10/32", "port": 80, "description": "Permitir HTTP para servidor específico"},
+      {"id": "R2", "action": "deny", "protocol": "tcp", "src": "any", "dst": "192.168.2.0/24", "port": "any", "description": "Negar TCP para outra rede"}
+    ],
+    "expected_action": "deny",
+    "explanation": "Nenhuma regra corresponde ao pacote (R1 espera destino 10.0.0.10 porta 80, R2 espera destino 192.168.2.0/24). O comportamento padrão de uma ACL é negar (deny) quando nenhuma regra corresponde."
+  },
+  {
+    "name": "Primeira regra compatível",
+    "question": "Um pacote TCP de 10.0.0.20 para 192.168.2.50 na porta 22. Qual a primeira regra compatível?",
+    "packet": {"src_ip": "10.0.0.20", "dst_ip": "192.168.2.50", "protocol": "tcp", "port": 22},
+    "rules": [
+      {"id": "R1", "action": "deny", "protocol": "tcp", "src": "any", "dst": "192.168.2.0/24", "port": 22, "description": "Negar SSH para rede 192.168.2.0"},
+      {"id": "R2", "action": "permit", "protocol": "tcp", "src": "10.0.0.0/24", "dst": "any", "port": "any", "description": "Permitir TCP da rede local"},
+      {"id": "R3", "action": "deny", "protocol": "ip", "src": "any", "dst": "any", "port": "any", "description": "Negar todo o resto"}
+    ],
+    "expected_action": "deny",
+    "explanation": "O pacote TCP na porta 22 para 192.168.2.50 (rede 192.168.2.0/24) corresponde à regra R1 (deny tcp any 192.168.2.0/24 port 22). Como as regras são avaliadas por ordem, R1 é a primeira regra compatível."
+  },
+  {
+    "name": "Protocolo IP genérico",
+    "question": "Um pacote UDP de 10.0.0.50 para 192.168.1.100 na porta 1234. O protocolo 'ip' na regra R2 combina com UDP?",
+    "packet": {"src_ip": "10.0.0.50", "dst_ip": "192.168.1.100", "protocol": "udp", "port": 1234},
+    "rules": [
+      {"id": "R1", "action": "permit", "protocol": "tcp", "src": "any", "dst": "any", "port": 80, "description": "Permitir HTTP"},
+      {"id": "R2", "action": "deny", "protocol": "ip", "src": "any", "dst": "any", "port": "any", "description": "Negar todo o IP"}
+    ],
+    "expected_action": "deny",
+    "explanation": "O protocolo 'ip' é genérico e combina com qualquer protocolo IP (TCP, UDP, ICMP, etc.). Como R1 só permite TCP porta 80 e o pacote é UDP, R2 (deny ip any any) é a primeira regra compatível."
+  }
+]

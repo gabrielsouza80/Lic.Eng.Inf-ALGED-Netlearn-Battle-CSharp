@@ -1,0 +1,46 @@
+@page
+@model HistoryModel
+@{
+    ViewData["Title"] = "Histórico";
+}
+
+<h1>Histórico de Tentativas</h1>
+
+@if (Model.Attempts.Count == 0)
+{
+    <p>Ainda não tens tentativas. <a href="/Play">Joga agora!</a></p>
+}
+else
+{
+    <table class="attempts-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Nível</th>
+                <th>Tópico</th>
+                <th>Pergunta</th>
+                <th>Resultado</th>
+                <th>Pontos</th>
+                <th>Tempo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model.Attempts)
+            {
+                <tr class="@(a.IsCorrect ? "row-correct" : "row-wrong")">
+                    <td>@a.CreatedAt.ToString("dd/MM/yy HH:mm")</td>
+                    <td>@a.Level</td>
+                    <td>@a.Topic</td>
+                    <td>@a.Question</td>
+                    <td>@(a.IsCorrect ? "Correto" : "Errado")</td>
+                    <td class="@(a.Points >= 0 ? "positive" : "negative")">
+                        @(a.Points >= 0 ? "+" : "")@a.Points
+                    </td>
+                    <td>@(a.ResponseTimeSeconds > 0 ? $"{a.ResponseTimeSeconds:F1}s" : "Sem dados")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p><a href="/Dashboard" class="btn btn-secondary">Voltar ao Dashboard</a></p>

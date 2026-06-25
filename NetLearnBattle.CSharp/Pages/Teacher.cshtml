@@ -1,0 +1,208 @@
+@page
+@model TeacherModel
+@{
+    ViewData["Title"] = "Área do Professor";
+}
+
+<h1>Área do Professor</h1>
+
+<p class="academic-note">
+    A área do professor é pública nesta versão académica.
+    Como melhoria futura, poderia haver autenticação específica para professor.
+</p>
+
+@if (Model.TeacherStats == null || Model.TeacherStats.TotalQuestions == 0)
+{
+    <p>Ainda não existem dados estatísticos.</p>
+}
+else
+{
+    var t = Model.TeacherStats;
+
+    <h2>Visão Global</h2>
+    <div class="stats-cards">
+        <div class="stat-card">
+            <h3>Total Geral</h3>
+            <p class="stat-value">@t.TotalQuestions</p>
+        </div>
+        <div class="stat-card">
+            <h3>Certas</h3>
+            <p class="stat-value correct">@t.CorrectAnswers</p>
+        </div>
+        <div class="stat-card">
+            <h3>Erradas</h3>
+            <p class="stat-value wrong">@t.WrongAnswers</p>
+        </div>
+        <div class="stat-card">
+            <h3>Taxa Global</h3>
+            <p class="stat-value">@t.AccuracyRate.ToString("F1")%</p>
+        </div>
+    </div>
+
+    <h2>Taxa por Nível</h2>
+    @if (t.ByLevel.Count == 0)
+    {
+        <p>Sem dados por nível.</p>
+    }
+    else
+    {
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Nível</th>
+                    <th>Total</th>
+                    <th>Certas</th>
+                    <th>Erradas</th>
+                    <th>Taxa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var l in t.ByLevel)
+                {
+                    <tr>
+                        <td>@l.Level</td>
+                        <td>@l.Total</td>
+                        <td class="correct">@l.Correct</td>
+                        <td class="wrong">@l.Wrong</td>
+                        <td>@l.AccuracyRate.ToString("F1")%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h2>Taxa por Tópico</h2>
+    @if (t.ByTopic.Count == 0)
+    {
+        <p>Sem dados por tópico.</p>
+    }
+    else
+    {
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Tópico</th>
+                    <th>Total</th>
+                    <th>Certas</th>
+                    <th>Erradas</th>
+                    <th>Taxa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var topic in t.ByTopic)
+                {
+                    <tr>
+                        <td>@topic.Topic</td>
+                        <td>@topic.Total</td>
+                        <td class="correct">@topic.Correct</td>
+                        <td class="wrong">@topic.Wrong</td>
+                        <td>@topic.AccuracyRate.ToString("F1")%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h2>Distribuição de Scores (Quartis)</h2>
+    <div class="stats-cards">
+        <div class="stat-card">
+            <h3>Mínimo</h3>
+            <p class="stat-value">@t.Quartiles.Min</p>
+        </div>
+        <div class="stat-card">
+            <h3>Q1</h3>
+            <p class="stat-value">@t.Quartiles.Q1</p>
+        </div>
+        <div class="stat-card">
+            <h3>Mediana</h3>
+            <p class="stat-value">@t.Quartiles.Median</p>
+        </div>
+        <div class="stat-card">
+            <h3>Q3</h3>
+            <p class="stat-value">@t.Quartiles.Q3</p>
+        </div>
+        <div class="stat-card">
+            <h3>Máximo</h3>
+            <p class="stat-value">@t.Quartiles.Max</p>
+        </div>
+    </div>
+
+    <h2>Ranking Top 5</h2>
+    @if (t.Ranking.Count == 0)
+    {
+        <p>Ranking ainda vazio.</p>
+    }
+    else
+    {
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Utilizador</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < t.Ranking.Count; i++)
+                {
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@t.Ranking[i].Username</td>
+                        <td>@t.Ranking[i].Score</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h2>Tentativas Recentes</h2>
+    @if (t.RecentAttempts.Count == 0)
+    {
+        <p>Ainda não existem tentativas.</p>
+    }
+    else
+    {
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Username</th>
+                    <th>Nível</th>
+                    <th>Tópico</th>
+                    <th>Resultado</th>
+                    <th>Pontos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in t.RecentAttempts)
+                {
+                    <tr class="@(a.IsCorrect ? "row-correct" : "row-wrong")">
+                        <td>@a.CreatedAt.ToString("dd/MM/yy HH:mm")</td>
+                        <td>@a.Username</td>
+                        <td>@a.Level</td>
+                        <td>@a.Topic</td>
+                        <td>@(a.IsCorrect ? "Correto" : "Errado")</td>
+                        <td class="@(a.Points >= 0 ? "positive" : "negative")">
+                            @(a.Points >= 0 ? "+" : "")@a.Points
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+<h2>Servidor TCP</h2>
+<div class="academic-note">
+    <p>A aplicação web é a versão principal do jogo, com sessão completa de 5 perguntas.</p>
+    <p>O servidor TCP é uma demonstração de comunicação cliente-servidor com mensagens JSON.</p>
+    <p>Atende um cliente de cada vez (não concorrente).</p>
+</div>
+
+<h3>Iniciar servidor TCP</h3>
+<pre class="code-block">dotnet run -- tcp-server --host 127.0.0.1 --port 5001</pre>
+
+<h3>Iniciar cliente TCP</h3>
+<pre class="code-block">dotnet run -- tcp-client --host 127.0.0.1 --port 5001</pre>
+
+<p><a href="/Dashboard" class="btn btn-secondary">Voltar ao Dashboard</a></p>

@@ -1,0 +1,49 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Início";
+}
+
+<div class="hero">
+    <h1>NetLearn Battle</h1>
+    <p class="subtitle">Aprende Redes de Computadores a jogar</p>
+    <p>
+        Um jogo educativo sobre IPv4, IPv6 e ACLs.
+        Cria a tua conta, escolhe um nível e começa a jogar!
+    </p>
+    <div class="hero-links">
+        <a href="/Register" class="btn btn-primary">Criar Conta</a>
+        <a href="/Login" class="btn btn-secondary">Entrar</a>
+    </div>
+</div>
+
+<div class="info-section">
+    <h2>Níveis de dificuldade</h2>
+    <div class="levels">
+        <div class="level-card">
+            <h3>Nível 1</h3>
+            <p>IPv4 básico</p>
+            <span class="points">+10 / -5</span>
+        </div>
+        <div class="level-card">
+            <h3>Nível 2</h3>
+            <p>Sub-redes IPv4</p>
+            <span class="points">+20 / -10</span>
+        </div>
+        <div class="level-card">
+            <h3>Nível 3</h3>
+            <p>Super-redes IPv4</p>
+            <span class="points">+30 / -15</span>
+        </div>
+        <div class="level-card">
+            <h3>Nível 4</h3>
+            <p>IPv6 simples</p>
+            <span class="points">+40 / -20</span>
+        </div>
+        <div class="level-card">
+            <h3>Nível 5</h3>
+            <p>ACLs</p>
+            <span class="points">+50 / -25</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,166 @@
+@page
+@model StatsModel
+@{
+    ViewData["Title"] = "Estatísticas";
+}
+
+<h1>Estatísticas do Aluno</h1>
+
+@if (Model.StudentStats != null)
+{
+    <div class="stats-cards">
+        <div class="stat-card">
+            <h3>Score Atual</h3>
+            <p class="stat-value">@Model.StudentStats.CurrentScore</p>
+        </div>
+    </div>
+}
+
+@if (Model.StudentStats == null || Model.StudentStats.TotalQuestions == 0)
+{
+    <p>Ainda não existem dados estatísticos. <a href="/Play">Joga agora!</a></p>
+}
+else
+{
+    var s = Model.StudentStats;
+
+    <div class="stats-cards">
+        <div class="stat-card">
+            <h3>Total</h3>
+            <p class="stat-value">@s.TotalQuestions</p>
+        </div>
+        <div class="stat-card">
+            <h3>Certas</h3>
+            <p class="stat-value correct">@s.CorrectAnswers</p>
+        </div>
+        <div class="stat-card">
+            <h3>Erradas</h3>
+            <p class="stat-value wrong">@s.WrongAnswers</p>
+        </div>
+        <div class="stat-card">
+            <h3>Taxa de Acerto</h3>
+            <p class="stat-value">@s.AccuracyRate.ToString("F1")%</p>
+        </div>
+    </div>
+
+    <h2>Tempo de Resposta</h2>
+    <div class="stats-cards">
+        <div class="stat-card">
+            <h3>Média</h3>
+            <p class="stat-value">@s.AverageResponseTime.ToString("F1")s</p>
+        </div>
+        <div class="stat-card">
+            <h3>Mediana</h3>
+            <p class="stat-value">@s.MedianResponseTime.ToString("F1")s</p>
+        </div>
+        <div class="stat-card">
+            <h3>Moda</h3>
+            <p class="stat-value">@s.ModeResponseTimeDisplay</p>
+        </div>
+    </div>
+
+    <h2>Taxa de Acerto por Nível</h2>
+    @if (s.ByLevel.Count == 0)
+    {
+        <p>Sem dados por nível.</p>
+    }
+    else
+    {
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Nível</th>
+                    <th>Total</th>
+                    <th>Certas</th>
+                    <th>Erradas</th>
+                    <th>Taxa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var l in s.ByLevel)
+                {
+                    <tr>
+                        <td>@l.Level</td>
+                        <td>@l.Total</td>
+                        <td class="correct">@l.Correct</td>
+                        <td class="wrong">@l.Wrong</td>
+                        <td>@l.AccuracyRate.ToString("F1")%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h2>Taxa de Acerto por Tópico</h2>
+    @if (s.ByTopic.Count == 0)
+    {
+        <p>Sem dados por tópico.</p>
+    }
+    else
+    {
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Tópico</th>
+                    <th>Total</th>
+                    <th>Certas</th>
+                    <th>Erradas</th>
+                    <th>Taxa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in s.ByTopic)
+                {
+                    <tr>
+                        <td>@t.Topic</td>
+                        <td>@t.Total</td>
+                        <td class="correct">@t.Correct</td>
+                        <td class="wrong">@t.Wrong</td>
+                        <td>@t.AccuracyRate.ToString("F1")%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h2>Tópico onde mais falha</h2>
+    <p>@s.WeakestTopic</p>
+
+    @if (s.ScoreEvolution.Count > 0)
+    {
+        <h2>Evolução do Score por Sessão</h2>
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Sessão</th>
+                    <th>Nível</th>
+                    <th>Perguntas</th>
+                    <th>Certas</th>
+                    <th>Erradas</th>
+                    <th>Pontos da sessão</th>
+                    <th>Score final</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in s.ScoreEvolution)
+                {
+                    <tr>
+                        <td>@e.CreatedAt.ToString("dd/MM/yy HH:mm")</td>
+                        <td>@e.SessionId</td>
+                        <td>@e.Level</td>
+                        <td>@e.TotalQuestions</td>
+                        <td class="correct">@e.CorrectAnswers</td>
+                        <td class="wrong">@e.WrongAnswers</td>
+                        <td class="@(e.SessionPoints >= 0 ? "positive" : "negative")">
+                            @(e.SessionPoints >= 0 ? "+" : "")@e.SessionPoints
+                        </td>
+                        <td>@e.Score</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+<p><a href="/Dashboard" class="btn btn-secondary">Voltar ao Dashboard</a></p>

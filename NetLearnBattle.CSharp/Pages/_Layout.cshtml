@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NetLearn Battle — @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">NetLearn Battle</a>
+            <div class="nav-links">
+                @{
+                    var username = Context.Session.GetString("Username");
+                }
+                @if (!string.IsNullOrEmpty(username))
+                {
+                    <span>Olá, @username</span>
+                    <a href="/Dashboard">Dashboard</a>
+                    <a href="/Logout">Sair</a>
+                }
+                else
+                {
+                    <a href="/Login">Login</a>
+                    <a href="/Register">Registar</a>
+                }
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <p>NetLearn Battle — Projeto Académico</p>
+    </footer>
+</body>
+</html>

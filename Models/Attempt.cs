@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace NetLearnBattle.CSharp.Models;
 
+// [M08] Tentativa respondida pelo aluno e persistida em JSON.
 public class Attempt
 {
     public string Username { get; set; } = string.Empty;

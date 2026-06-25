@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace NetLearnBattle.CSharp.Models;
 
+// [M13] Entrada pública do ranking: apenas username e score.
 public class ScoreEntry
 {
     [JsonPropertyName("username")]

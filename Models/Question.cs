@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace NetLearnBattle.CSharp.Models;
 
+// [M07] Pergunta do jogo; CorrectIndex é interno e não deve aparecer antes da resposta.
 public class Question
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");

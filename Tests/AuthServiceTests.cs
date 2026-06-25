@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Tests;
 
+// [M37] Testes da autenticação.
 public class AuthServiceTests
 {
     [Fact]

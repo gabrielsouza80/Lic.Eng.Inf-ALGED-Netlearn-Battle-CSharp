@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation    Fluxo end-to-end completo da versão C# do NetLearn Battle.
+# [M38] Fluxo E2E: registo, login, jogo, páginas principais e logout.
 Resource         resources/csharp_common.resource
 Suite Setup      Iniciar Ambiente CSharp
 Suite Teardown   Terminar Ambiente CSharp

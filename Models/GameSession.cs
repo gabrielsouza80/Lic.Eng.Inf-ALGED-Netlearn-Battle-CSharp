@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Models;
 
+// [M09] Sessão com fila FIFO de perguntas e tentativas do aluno.
 public class GameSession
 {
     public string SessionId { get; set; } = Guid.NewGuid().ToString("N");

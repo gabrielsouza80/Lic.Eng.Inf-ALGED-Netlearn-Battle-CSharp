@@ -21,6 +21,7 @@ public class SummaryModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M27] Summary tenta carregar a sessão ativa ou a última sessão respondida.
         var username = HttpContext.Session.GetString("Username");
         if (string.IsNullOrEmpty(username))
             return RedirectToPage("/Login");

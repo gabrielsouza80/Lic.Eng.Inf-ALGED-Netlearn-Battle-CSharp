@@ -33,6 +33,7 @@ public class PlayModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M25] Play mostra sessão ativa ou escolha de nível.
         var username = HttpContext.Session.GetString("Username");
         if (string.IsNullOrEmpty(username))
             return RedirectToPage("/Login");
@@ -62,6 +63,7 @@ public class PlayModel : PageModel
 
     public IActionResult OnPost()
     {
+        // [M25] POST inicia nível ou submete resposta da sessão atual.
         var username = HttpContext.Session.GetString("Username");
         if (string.IsNullOrEmpty(username))
             return RedirectToPage("/Login");
@@ -90,6 +92,7 @@ public class PlayModel : PageModel
             var session = _store.GetSession(sessionIdStr);
             if (session == null || session.Username != username || session.CurrentQuestion == null)
                 return RedirectToPage();
+            // [M25] Índice inválido volta para Play sem alterar score.
             if (selectedIndex < 0 || selectedIndex >= session.CurrentQuestion.Options.Count)
                 return RedirectToPage();
 

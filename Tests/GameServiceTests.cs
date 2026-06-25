@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Tests;
 
+// [M37] Testes da sessão, pontuação e respostas inválidas.
 public class GameServiceTests
 {
     [Fact]

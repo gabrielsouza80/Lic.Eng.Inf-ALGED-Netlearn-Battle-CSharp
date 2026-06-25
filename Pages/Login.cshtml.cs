@@ -23,6 +23,7 @@ public class LoginModel : PageModel
 
     public IActionResult OnPost()
     {
+        // [M22] Login guarda o Username na sessão quando as credenciais são válidas.
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
             Message = "Preenche todos os campos.";

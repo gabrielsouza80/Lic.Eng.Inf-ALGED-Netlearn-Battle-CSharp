@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Tests;
 
+// [M37] Testes do score e ranking.
 public class ScoreServiceTests
 {
     [Fact]

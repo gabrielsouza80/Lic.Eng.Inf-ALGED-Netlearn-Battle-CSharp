@@ -20,6 +20,7 @@ public class StatsModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M29] Estatísticas são calculadas para o aluno autenticado.
         var username = HttpContext.Session.GetString("Username");
         if (string.IsNullOrEmpty(username))
             return RedirectToPage("/Login");

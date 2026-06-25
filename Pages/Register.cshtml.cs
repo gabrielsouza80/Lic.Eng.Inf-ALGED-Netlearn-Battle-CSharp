@@ -24,6 +24,7 @@ public class RegisterModel : PageModel
 
     public IActionResult OnPost()
     {
+        // [M21] Registo delega validação e hash ao AuthService.
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
             Message = "Preenche todos os campos.";

@@ -22,6 +22,7 @@ public class GameService
 
     public GameSession StartSession(string username, int level)
     {
+        // [M15] Cria sessão curta com 5 perguntas.
         var session = _store.CreateSession(username, level);
         var questions = GenerateQuestions(level);
         session.TotalQuestions = questions.Count;
@@ -29,6 +30,7 @@ public class GameService
         foreach (var q in questions)
             session.Questions.Enqueue(q);
 
+        // [M44] Queue FIFO: a primeira pergunta enfileirada é apresentada primeiro.
         session.CurrentQuestion = session.Questions.Dequeue();
         session.QuestionStartedAt = DateTime.UtcNow;
         _store.UpdateSession(session);
@@ -37,8 +39,10 @@ public class GameService
 
     public Attempt GradeAnswer(GameSession session, int selectedIndex)
     {
+        // [M15] Corrige a resposta, atualiza score e grava tentativa.
         var question = session.CurrentQuestion;
         if (question == null) throw new InvalidOperationException("No current question.");
+        // [M25] selectedIndex inválido é rejeitado antes de alterar score.
         if (selectedIndex < 0 || selectedIndex >= question.Options.Count)
             throw new ArgumentOutOfRangeException(nameof(selectedIndex), "selectedIndex inválido.");
 
@@ -94,6 +98,7 @@ public class GameService
 
     private List<Question> GenerateQuestions(int level)
     {
+        // [M15] Mapeia cada nível para o motor de perguntas correto.
         var questions = new List<Question>();
 
         for (int i = 0; i < 5; i++)
@@ -114,6 +119,7 @@ public class GameService
 
     private void SaveAttempt(Attempt attempt)
     {
+        // [M08] Tentativas ficam persistidas em attempts.json.
         var attempts = _json.LoadList<Attempt>("attempts.json");
         attempts.Add(attempt);
         _json.Save("attempts.json", attempts);

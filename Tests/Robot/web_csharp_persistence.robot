@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation    Teste de persistência de dados entre sessões na versão C#.
+# [M38] Valida que dados persistem em JSON entre logins.
 Resource         resources/csharp_common.resource
 Suite Setup      Iniciar Ambiente CSharp
 Suite Teardown   Terminar Ambiente CSharp

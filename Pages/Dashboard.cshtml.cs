@@ -18,6 +18,7 @@ public class DashboardModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M24] Dashboard exige login e mostra score atual.
         Username = HttpContext.Session.GetString("Username") ?? string.Empty;
 
         if (string.IsNullOrEmpty(Username))

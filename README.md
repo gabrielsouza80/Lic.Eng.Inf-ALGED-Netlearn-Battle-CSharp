@@ -301,6 +301,18 @@ tools/robotmcp/output/robotmcp_report.md
 Esta ferramenta não é necessária para executar a aplicação; serve apenas para
 apoio à validação antes da entrega.
 
+## Manual do Código
+
+Este projeto inclui o ficheiro `MANUAL_DO_CODIGO.md`.
+Os comentários do código usam referências como `[M11]`, `[M15]` e `[M34]`,
+que apontam para explicações do manual.
+
+Exemplo:
+
+```csharp
+// [M15] Corrige a resposta e atualiza o score.
+```
+
 ## Migração
 
 Esta versão replica a lógica do projeto original em Python/Flask, mantendo a mesma estrutura de dados JSON e o mesmo fluxo de autenticação, mas utilizando ASP.NET Core Razor Pages e C#.

@@ -18,6 +18,7 @@ public class HistoryModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M28] Histórico filtra tentativas pelo utilizador autenticado.
         var username = HttpContext.Session.GetString("Username");
         if (string.IsNullOrEmpty(username))
             return RedirectToPage("/Login");

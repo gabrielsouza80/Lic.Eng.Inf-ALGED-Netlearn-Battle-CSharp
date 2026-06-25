@@ -5,6 +5,7 @@ var mode = "web";
 var tcpHost = "127.0.0.1";
 var tcpPort = 5001;
 
+// [M03] Lê argumentos para escolher web, tcp-server ou tcp-client.
 for (int i = 0; i < args.Length; i++)
 {
     if (args[i] == "--" && i + 1 < args.Length) { mode = args[i + 1]; i++; }
@@ -15,6 +16,7 @@ for (int i = 0; i < args.Length; i++)
 
 if (mode == "tcp-client")
 {
+    // [M35] Cliente TCP demonstrativo usado no terminal.
     var client = new TcpClientDemo(tcpHost, tcpPort);
     await client.RunAsync();
     return;
@@ -22,6 +24,7 @@ if (mode == "tcp-client")
 
 var builder = WebApplication.CreateBuilder(args);
 
+// [M03] Ativa Razor Pages e sessão web.
 builder.Services.AddRazorPages();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -31,6 +34,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// [M03] Regista os serviços usados pelas páginas e pelo TCP.
 builder.Services.AddSingleton<JsonService>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<ScoreService>();
@@ -42,6 +46,7 @@ builder.Services.AddSingleton<StatsService>();
 
 if (mode == "tcp-server")
 {
+    // [M34] Modo servidor TCP: reutiliza os mesmos serviços da aplicação.
     var app = builder.Build();
     var server = new TcpServer(
         app.Services.GetRequiredService<AuthService>(),
@@ -59,6 +64,7 @@ if (mode == "tcp-server")
 
 if (string.IsNullOrWhiteSpace(builder.Configuration["urls"]))
 {
+    // [M03] Modo web padrão: site em localhost:5002.
     builder.WebHost.UseUrls("http://localhost:5002");
 }
 
@@ -72,7 +78,9 @@ if (!app2.Environment.IsDevelopment())
 
 app2.UseStaticFiles();
 app2.UseRouting();
+// [M19] A sessão guarda utilizador autenticado e sessão de jogo.
 app2.UseSession();
 app2.MapRazorPages();
 
+// [M03] Inicia a aplicação web.
 app2.Run();

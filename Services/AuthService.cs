@@ -16,6 +16,7 @@ public class AuthService
 
     public bool Register(string username, string password)
     {
+        // [M12] Registo cria salt e hash; nunca grava password real.
         var users = _json.LoadList<User>(UsersFile);
 
         if (users.Any(u =>
@@ -35,6 +36,7 @@ public class AuthService
 
     public User? Login(string username, string password)
     {
+        // [M12] Login compara hash calculado com hash guardado.
         var users = _json.LoadList<User>(UsersFile);
 
         var user = users.FirstOrDefault(u =>
@@ -48,6 +50,7 @@ public class AuthService
 
     private static string ComputeHash(string password, string salt)
     {
+        // [M41][M42] Salt + password passam por SHA-256.
         var input = Encoding.UTF8.GetBytes(salt + password);
         var hash = SHA256.HashData(input);
         return Convert.ToHexString(hash).ToLowerInvariant();

@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace NetLearnBattle.CSharp.Models;
 
+// [M17] Regra ACL usada para permitir ou negar pacotes.
 public class AclRule
 {
     [JsonPropertyName("id")]

@@ -14,12 +14,14 @@ public class ScoreService
 
     public int GetScore(string username)
     {
+        // [M13] Se não existir score, começa em 0.
         var scores = _json.LoadDictionary<int>(ScoresFile);
         return scores.GetValueOrDefault(username, 0);
     }
 
     public void AddPoints(string username, int points)
     {
+        // [M43] Acertos somam e erros subtraem pontos.
         var scores = _json.LoadDictionary<int>(ScoresFile);
         var current = scores.GetValueOrDefault(username, 0);
         scores[username] = current + points;
@@ -28,6 +30,7 @@ public class ScoreService
 
     public List<ScoreEntry> GetRanking()
     {
+        // [M30] Ranking público mostra só username e score.
         var scores = GetAllScores();
         return scores
             .Select(kv => new ScoreEntry { Username = kv.Key, Score = kv.Value })

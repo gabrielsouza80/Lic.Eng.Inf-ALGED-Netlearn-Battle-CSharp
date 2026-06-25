@@ -15,6 +15,7 @@ public class StatsService
 
     public StudentStats GetStudentStats(string username)
     {
+        // [M18] Estatísticas do aluno usam apenas tentativas do próprio utilizador.
         var allAttempts = _json.LoadList<Attempt>("attempts.json");
         var attempts = allAttempts
             .Where(a => a.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
@@ -37,6 +38,7 @@ public class StatsService
         stats.WeakestTopic = FindWeakestTopic(stats.ByTopic);
 
         var times = attempts
+            // [M18] Tempos 0 ou ausentes não entram na média/mediana/moda.
             .Where(a => a.ResponseTimeSeconds > 0)
             .Select(a => a.ResponseTimeSeconds)
             .OrderBy(t => t)
@@ -56,6 +58,7 @@ public class StatsService
 
     public TeacherStats GetTeacherStats()
     {
+        // [M31] Área Teacher mostra dados globais, sem dados sensíveis.
         var allAttempts = _json.LoadList<Attempt>("attempts.json");
         var stats = new TeacherStats
         {
@@ -140,6 +143,7 @@ public class StatsService
 
     private static string CalculateModeDisplay(List<double> values)
     {
+        // [M18] Moda só é mostrada quando há repetição.
         var mode = values
             .GroupBy(v => Math.Round(v, 1))
             .OrderByDescending(g => g.Count())
@@ -178,6 +182,7 @@ public class StatsService
 
     private static QuartileStats CalculateQuartiles(List<int> scores)
     {
+        // [M18] Quartis resumem a distribuição dos scores.
         scores = scores.OrderBy(s => s).ToList();
 
         if (scores.Count == 0) return new QuartileStats();

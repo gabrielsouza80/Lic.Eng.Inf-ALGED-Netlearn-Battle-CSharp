@@ -21,6 +21,7 @@ public class ResultModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M26] Result mostra apenas o último feedback da sessão do utilizador.
         var username = HttpContext.Session.GetString("Username");
         if (string.IsNullOrEmpty(username))
             return RedirectToPage("/Login");

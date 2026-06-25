@@ -18,6 +18,7 @@ public class TeacherModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M31] Área pública académica com estatísticas globais.
         TeacherStats = _stats.GetTeacherStats();
         return Page();
     }

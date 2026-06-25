@@ -18,6 +18,7 @@ public class RankingModel : PageModel
 
     public IActionResult OnGet()
     {
+        // [M30] Ranking é público e não expõe hash, salt ou password.
         Ranking = _scores.GetRanking();
         return Page();
     }

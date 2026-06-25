@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Tests;
 
+// [M37] Testes da leitura/gravação JSON.
 public class JsonServiceTests
 {
     [Fact]

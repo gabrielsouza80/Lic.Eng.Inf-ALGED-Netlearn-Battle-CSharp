@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace NetLearnBattle.CSharp.Network;
 
+// [M33] Mensagem JSON genérica usada no TCP.
 public class TcpMessage
 {
     [JsonPropertyName("type")]

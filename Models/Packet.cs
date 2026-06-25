@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace NetLearnBattle.CSharp.Models;
 
+// [M17] Pacote de rede avaliado pelo motor ACL.
 public class Packet
 {
     [JsonPropertyName("src_ip")]

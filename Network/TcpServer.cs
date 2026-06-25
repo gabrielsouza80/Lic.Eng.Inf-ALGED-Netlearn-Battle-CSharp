@@ -104,6 +104,7 @@ public class TcpServer
 
     internal Task<string> HandleMessage(string type, JsonElement root, ClientState state)
     {
+        // [M34] Encaminha cada tipo de mensagem TCP para o handler correto.
         return type switch
         {
             "AUTH_REQUEST" => HandleAuth(root, state),
@@ -119,6 +120,7 @@ public class TcpServer
 
     private Task<string> HandleAuth(JsonElement root, ClientState state)
     {
+        // [M34] AUTH_REQUEST autentica username/password.
         var username = GetString(root, "username");
         var password = GetString(root, "password");
 
@@ -139,6 +141,7 @@ public class TcpServer
 
     private Task<string> HandleQuestionRequest(JsonElement root, ClientState state)
     {
+        // [M34] QUESTION_REQUEST exige autenticação antes de enviar pergunta.
         if (!state.IsAuthenticated)
         {
             return Task.FromResult(CreateJson("ERROR", new Dictionary<string, object> { ["message"] = "Autenticação necessária." }));
@@ -169,6 +172,7 @@ public class TcpServer
 
         return Task.FromResult(CreateJson("QUESTION_PUSH", new Dictionary<string, object>
         {
+            // [M36] CorrectIndex não é enviado antes da resposta.
             ["questionId"] = question.Id,
             ["level"] = question.Level,
             ["topic"] = question.Topic,
@@ -180,6 +184,7 @@ public class TcpServer
 
     private Task<string> HandleAnswerSubmit(JsonElement root, ClientState state)
     {
+        // [M34] ANSWER_SUBMIT corrige uma pergunta ativa.
         if (!state.IsAuthenticated)
         {
             return Task.FromResult(CreateJson("ERROR", new Dictionary<string, object> { ["message"] = "Autenticação necessária." }));
@@ -247,6 +252,7 @@ public class TcpServer
 
     private Task<string> HandleScoreUpdate(ClientState state)
     {
+        // [M34] SCORE_UPDATE devolve o score atual do cliente autenticado.
         if (!state.IsAuthenticated)
         {
             return Task.FromResult(CreateJson("ERROR", new Dictionary<string, object> { ["message"] = "Autenticação necessária." }));
@@ -258,12 +264,14 @@ public class TcpServer
 
     private Task<string> HandleRankingRequest()
     {
+        // [M34] RANKING_REQUEST devolve Top 5 sem dados sensíveis.
         var ranking = _scores.GetRanking();
         return Task.FromResult(CreateJson("RANKING_RESPONSE", new Dictionary<string, object> { ["ranking"] = ranking }));
     }
 
     private Task<string> HandleStatsRequest(ClientState state)
     {
+        // [M34] STATS_REQUEST devolve estatísticas do cliente autenticado.
         if (!state.IsAuthenticated)
         {
             return Task.FromResult(CreateJson("ERROR", new Dictionary<string, object> { ["message"] = "Autenticação necessária." }));
@@ -283,6 +291,7 @@ public class TcpServer
 
     private Task<string> HandleEndSession()
     {
+        // [M34] END_SESSION termina a sessão TCP demonstrativa.
         return Task.FromResult(CreateJson("END_SESSION", new Dictionary<string, object>
         {
             ["message"] = "Sessão terminada pelo servidor.",

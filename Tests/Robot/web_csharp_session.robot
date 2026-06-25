@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation    Teste de sessão completa de 5 perguntas na versão C#.
+# [M38] Valida sessão de 5 perguntas no browser.
 Resource         resources/csharp_common.resource
 Suite Setup      Iniciar Ambiente CSharp
 Suite Teardown   Terminar Ambiente CSharp

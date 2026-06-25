@@ -3,6 +3,7 @@ using NetLearnBattle.CSharp.Network;
 
 namespace NetLearnBattle.CSharp.Tests;
 
+// [M37] Testes das mensagens TCP.
 public class TcpHandlerTests
 {
     private (string dir, JsonService json, AuthService auth, ScoreService scores, StatsService stats, IpService ip, AclService acl, GameService game, GameSessionStore store, TcpServer server) Setup()

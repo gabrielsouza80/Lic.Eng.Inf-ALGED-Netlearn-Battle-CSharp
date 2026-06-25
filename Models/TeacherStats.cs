@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Models;
 
+// [M18] Estatísticas globais usadas na área do professor.
 public class TeacherStats
 {
     public int TotalQuestions { get; set; }

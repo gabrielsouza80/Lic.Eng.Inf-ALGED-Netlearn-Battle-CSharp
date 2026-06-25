@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Tests;
 
+// [M37] Testes das regras ACL.
 public class AclServiceTests
 {
     private static (string dir, JsonService json) CreateWithAcls()

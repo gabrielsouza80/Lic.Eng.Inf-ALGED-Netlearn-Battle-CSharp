@@ -6,6 +6,7 @@ namespace NetLearnBattle.CSharp.Network;
 
 public class TcpClientDemo
 {
+    // [M35] Cliente de terminal usado apenas para demonstrar o TCP.
     private readonly string _host;
     private readonly int _port;
 
@@ -17,6 +18,7 @@ public class TcpClientDemo
 
     public async Task RunAsync()
     {
+        // [M35] Fluxo simples: autenticar, pedir pergunta, responder e consultar dados.
         Console.WriteLine("=== NetLearn Battle — TCP Client ===\n");
 
         try

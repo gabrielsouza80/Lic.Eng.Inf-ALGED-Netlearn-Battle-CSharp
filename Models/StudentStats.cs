@@ -1,5 +1,6 @@
 namespace NetLearnBattle.CSharp.Models;
 
+// [M18] Estatísticas calculadas para um aluno.
 public class StudentStats
 {
     public string Username { get; set; } = string.Empty;

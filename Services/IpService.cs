@@ -10,6 +10,7 @@ public class IpService
 
     public string CalculateIpv4NetworkId(string ip, int prefix)
     {
+        // [M47] Network ID é calculado aplicando a máscara ao IPv4.
         var bytes = IPAddress.Parse(ip).GetAddressBytes();
         var mask = CreateIpv4Mask(prefix);
         for (int i = 0; i < 4; i++)
@@ -19,6 +20,7 @@ public class IpService
 
     public string CalculateIpv4Broadcast(string ip, int prefix)
     {
+        // [M48] Broadcast IPv4 é o último endereço da rede.
         var bytes = IPAddress.Parse(ip).GetAddressBytes();
         var mask = CreateIpv4Mask(prefix);
         for (int i = 0; i < 4; i++)
@@ -28,11 +30,13 @@ public class IpService
 
     public bool SameIpv4Network(string ip1, string ip2, int prefix)
     {
+        // [M49] Dois IPv4 estão no mesmo segmento se tiverem o mesmo Network ID.
         return CalculateIpv4NetworkId(ip1, prefix) == CalculateIpv4NetworkId(ip2, prefix);
     }
 
     public Question GenerateIpv4Question(int level)
     {
+        // [M46] Gera perguntas IPv4 para níveis 1, 2 e 3.
         var (prefix, pointsCorrect, pointsWrong) = level switch
         {
             1 => (GetRandomPrefix(new[] { 8, 16, 24 }), 10, -5),
@@ -54,6 +58,7 @@ public class IpService
 
     public string CalculateIpv6NetworkId(string ip, int prefix)
     {
+        // [M50] IPv6 usa prefixo de rede, mas não broadcast tradicional.
         var bytes = IPAddress.Parse(ip).GetAddressBytes();
         var mask = CreateIpv6Mask(prefix);
         for (int i = 0; i < bytes.Length; i++)
@@ -63,11 +68,13 @@ public class IpService
 
     public bool SameIpv6Network(string ip1, string ip2, int prefix)
     {
+        // [M50] Mesmo segmento IPv6: compara o prefixo de rede.
         return CalculateIpv6NetworkId(ip1, prefix) == CalculateIpv6NetworkId(ip2, prefix);
     }
 
     public Question GenerateIpv6Question()
     {
+        // [M50] Nível 4 mistura Network ID, mesmo segmento, sub-redes e conceito.
         var pointsCorrect = 40;
         var pointsWrong = -20;
         var type = _rng.Next(4);

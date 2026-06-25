@@ -16,6 +16,7 @@ public class AclService
 
     public bool RuleMatchesPacket(AclRule rule, Packet packet)
     {
+        // [M17] Uma regra combina se protocolo, IPs e porta forem compatíveis.
         return ProtocolMatches(rule.Protocol, packet.Protocol)
             && IpMatches(rule.Src, packet.SrcIp)
             && IpMatches(rule.Dst, packet.DstIp)
@@ -24,6 +25,7 @@ public class AclService
 
     public AclEvaluation EvaluateAclDetails(List<AclRule> rules, Packet packet)
     {
+        // [M54] First match: a primeira regra compatível decide.
         for (var index = 0; index < rules.Count; index++)
         {
             if (rules[index] == null)
@@ -40,6 +42,7 @@ public class AclService
             }
         }
 
+        // [M55] Sem regra compatível, o resultado padrão é deny.
         return new AclEvaluation();
     }
 
@@ -50,6 +53,7 @@ public class AclService
 
     public Question GenerateAclQuestion()
     {
+        // [M17] Nível 5 alterna tipos diferentes de perguntas ACL.
         var scenarios = _json.LoadList<AclScenario>("acls.json");
         var type = _nextQuestionType;
         _nextQuestionType = (_nextQuestionType + 1) % 5;

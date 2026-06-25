@@ -24,6 +24,7 @@ COVERAGE_TERMS = [
 
 
 def find_repo_root():
+    # [M39] Localiza a raiz sem depender da pasta atual do terminal.
     current = Path(__file__).resolve()
     for parent in [current.parent, *current.parents]:
         if (parent / "NetLearnBattle.CSharp.csproj").exists():
@@ -51,6 +52,7 @@ def find_command(command_name):
 
 
 def run_command(command, repo_root):
+    # [M39] Executa comandos externos e guarda output para relatório.
     completed = subprocess.run(
         command,
         cwd=repo_root,
@@ -85,6 +87,7 @@ def parse_xunit_result(text):
 
 
 def parse_robot_output(output_xml):
+    # [M39] Lê output.xml do Robot para contar testes.
     if not output_xml.exists():
         return {
             "exists": False,
@@ -171,6 +174,7 @@ def short_output(text, max_chars=3500):
 
 
 def run_base_validation(config, repo_root):
+    # [M39] Validação normal: build, xUnit e Robot.
     robot_output = repo_root / config["robot_output"]
     dotnet = find_command("dotnet")
     robot = find_command("robot")
@@ -200,6 +204,7 @@ def run_base_validation(config, repo_root):
 
 
 def build_report(config, repo_root, validation):
+    # [M39] Gera relatório Markdown da validação normal.
     build_result = validation["build"]
     test_result = validation["test"]
     xunit_stats = validation["xunit_stats"]
@@ -324,6 +329,7 @@ def wait_for_web(url, timeout_seconds):
 
 
 def start_explorer_server(config, repo_root):
+    # [M39] Inicia a app numa porta isolada para exploração segura.
     dotnet = find_command("dotnet")
     url = config["explorer_url"]
     output_dir = repo_root / "tools" / "robotmcp" / "output"
@@ -370,6 +376,7 @@ def selenium_modules():
 
 
 def is_destructive(element, keywords):
+    # [M39] Evita clicar em ações destrutivas.
     text_parts = [
         element.text or "",
         element.get_attribute("href") or "",
@@ -395,6 +402,7 @@ def visible_label(element):
 
 
 def inspect_current_page(driver, route, problems, ignored_actions, button_notes):
+    # [M39] Procura sinais simples de erro ou exposição de dados.
     title = (driver.title or "").strip()
     source = driver.page_source or ""
     body_text = ""
@@ -485,6 +493,7 @@ def analyze_robot_coverage(robot_dir):
 
 
 def run_explorer(config, repo_root):
+    # [M39] Explorer opcional: navega no site sem alterar código.
     global DESTRUCTIVE_KEYWORDS
     DESTRUCTIVE_KEYWORDS = config.get("destructive_keywords", [])
 
@@ -593,6 +602,7 @@ def run_explorer(config, repo_root):
 
 
 def explore_game(driver, base_url, timeout, result):
+    # [M39] Explora uma sessão segura do nível 1.
     driver.get(urljoin(base_url, "/Play"))
     WebDriverWait(driver, timeout).until(lambda d: d.execute_script("return document.readyState") == "complete")
     inspect_current_page(driver, "/Play", result["problems"], result["ignored"], result["button_notes"])
@@ -639,6 +649,7 @@ def explore_game(driver, base_url, timeout, result):
 
 
 def build_explorer_report(config, repo_root, validation, explorer_result):
+    # [M39] Relatório extra com páginas visitadas e buracos prováveis.
     build_ok = validation["build"]["ok"]
     xunit_stats = validation["xunit_stats"]
     robot_result = validation["robot_result"]
@@ -781,6 +792,7 @@ def validate_project_layout(config, repo_root):
 
 
 def main():
+    # [M39] Sem --explore mantém o comportamento normal do RobotMCP.
     parser = argparse.ArgumentParser(description="RobotMCP para o NetLearn Battle C#.")
     parser.add_argument("--explore", action="store_true", help="Executa exploração segura com Selenium.")
     args = parser.parse_args()

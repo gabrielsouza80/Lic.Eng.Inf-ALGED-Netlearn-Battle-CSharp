@@ -2,6 +2,7 @@ using NetLearnBattle.CSharp.Models;
 
 namespace NetLearnBattle.CSharp.Tests;
 
+// [M37] Testes das estatísticas.
 public class StatsServiceTests
 {
     private static (string dir, JsonService json, ScoreService scores, StatsService stats) CreateWithSeed()

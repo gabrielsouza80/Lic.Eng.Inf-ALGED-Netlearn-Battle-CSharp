@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation    Testes de autenticação e páginas protegidas na versão C#.
+# [M38] Valida login errado e páginas protegidas.
 Resource         resources/csharp_common.resource
 Suite Setup      Iniciar Ambiente CSharp Com Registo Novo
 Suite Teardown   Terminar Ambiente CSharp

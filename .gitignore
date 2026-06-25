@@ -10,10 +10,11 @@ csharp_error*.txt
 csharp_*.txt
 
 # Robot Framework results
-Tests/Robot/results/
 Tests/Robot/results/*
-!Tests/Robot/results/.gitkeep
 selenium-screenshot-*.png
+output.xml
+log.html
+report.html
 chromedriver.log
 csharp-output.log
 csharp-error.log

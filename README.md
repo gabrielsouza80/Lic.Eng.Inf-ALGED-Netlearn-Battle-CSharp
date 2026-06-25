@@ -185,7 +185,7 @@ Os testes:
 
 Pré-requisitos:
 - Python 3 com Robot Framework e SeleniumLibrary instalados
-- ChromeDriver no PATH
+- Google Chrome instalado; Selenium Manager/ChromeDriver compatível
 
 ```powershell
 pip install robotframework selenium robotframework-seleniumlibrary

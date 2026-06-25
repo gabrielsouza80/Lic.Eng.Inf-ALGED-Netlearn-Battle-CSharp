@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetLearnBattle.CSharp", "NetLearnBattle.CSharp.csproj", "{37E15A47-759A-4E48-8C92-D9829D527C7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetLearnBattle.CSharp.Tests", "Tests\NetLearnBattle.CSharp.Tests.csproj", "{39066C8D-B36C-4AD4-8D1C-42F0D714E82C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37E15A47-759A-4E48-8C92-D9829D527C7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37E15A47-759A-4E48-8C92-D9829D527C7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37E15A47-759A-4E48-8C92-D9829D527C7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37E15A47-759A-4E48-8C92-D9829D527C7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39066C8D-B36C-4AD4-8D1C-42F0D714E82C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39066C8D-B36C-4AD4-8D1C-42F0D714E82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39066C8D-B36C-4AD4-8D1C-42F0D714E82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39066C8D-B36C-4AD4-8D1C-42F0D714E82C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

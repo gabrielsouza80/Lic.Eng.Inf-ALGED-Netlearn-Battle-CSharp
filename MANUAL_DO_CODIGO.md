@@ -277,3 +277,55 @@ expor `CorrectIndex` antes da resposta.
 
 JSON é suficiente para o projeto académico, mas uma base de dados seria melhor em
 produção. TCP é demonstrativo e a área Teacher é pública nesta versão.
+
+## [M61] Dados locais gerados pela aplicação
+
+A aplicação pode criar `Data/users.json`, `Data/scores.json`,
+`Data/attempts.json` e `Data/sessions.json`. Estes ficheiros são dados locais de
+execução.
+
+## [M62] Dados fixos que devem ficar no projeto
+
+`Data/questions.json`, `Data/acls.json` e `Data/examples/` fazem parte do código
+entregue. Eles não devem ser apagados pelo reset.
+
+## [M63] O TCP é demonstração, mas usa lógica real
+
+O TCP é simples e académico, mas usa os mesmos serviços de autenticação, score,
+perguntas, ranking e estatísticas. Por isso pode gerar dados locais.
+
+## [M64] Dados gerados pelo RobotMCP Explorer
+
+O RobotMCP Explorer cria utilizadores temporários e joga no browser para testar
+fluxos. Isso pode gerar users, scores e attempts locais.
+
+## [M65] Comando de reset dos dados locais
+
+O comando `dotnet run -- reset-data` remove apenas dados locais gerados pela
+aplicação.
+
+## [M66] Quando usar o reset
+
+Usar antes de uma demonstração limpa, antes de preparar o ZIP ou depois de testes
+Robot/RobotMCP que criaram dados temporários.
+
+## [M67] Segurança do reset
+
+O reset usa uma lista fechada de ficheiros permitidos. Ele não apaga a pasta
+`Data/`, não usa wildcard perigoso e não remove dados fixos.
+
+## [M68] Como explicar isto ao professor
+
+“Os dados de utilização são locais e ignorados pelo Git. O reset serve para limpar
+utilizadores, scores e tentativas sem apagar perguntas nem ACLs.”
+
+## [M69] Comandos importantes finais
+
+Comandos principais: `dotnet run`, `dotnet build`, `dotnet test`,
+`dotnet run -- reset-data`, `robot --outputdir Tests/Robot/results Tests/Robot`
+e `python tools/robotmcp/robotmcp.py`.
+
+## [M70] Resumo dos dados
+
+Dados fixos ficam no projeto. Dados reais de uso ficam locais e ignorados. O reset
+limpa só os dados locais.

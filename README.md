@@ -32,6 +32,12 @@ dotnet run -- tcp-client --host 127.0.0.1 --port 5001
 dotnet build
 ```
 
+### Reset de dados locais
+
+```powershell
+dotnet run -- reset-data
+```
+
 ## Estrutura do projeto
 
 ```
@@ -65,6 +71,32 @@ dotnet build
 - `Data/acls.json` — cenários de ACL para o nível 5
 - `Data/examples/` — modelos da estrutura esperada dos JSONs locais
 - `Data/users.json`, `Data/scores.json`, `Data/attempts.json` — dados locais gerados pela aplicação, ignorados pelo Git
+
+## Reset de dados locais
+
+O projeto usa JSON como persistência académica. A aplicação web, o TCP e o
+RobotMCP Explorer podem gerar dados locais durante testes e demonstrações.
+
+Esses dados ficam em:
+
+* `Data/users.json`
+* `Data/scores.json`
+* `Data/attempts.json`
+* `Data/sessions.json`
+
+Estes ficheiros estão ignorados no Git e não entram no ZIP baixado pelo GitHub.
+
+Para limpar os dados locais:
+
+```powershell
+dotnet run -- reset-data
+```
+
+O reset não apaga:
+
+* `Data/questions.json`
+* `Data/acls.json`
+* `Data/examples/`
 
 ## Funcionalidades implementadas
 
@@ -200,7 +232,7 @@ robot --outputdir Tests/Robot/results Tests/Robot
 
 - Projeto de testes: `Tests/` (xUnit)
 - Framework: **xUnit** com `Microsoft.NET.Test.Sdk`
-- 103 testes distribuídos por 8 ficheiros, cobrindo todos os serviços:
+- 106 testes distribuídos por 9 ficheiros, cobrindo todos os serviços:
 
 | Ficheiro | Testes | Cobertura |
 |----------|--------|-----------|
@@ -212,6 +244,7 @@ robot --outputdir Tests/Robot/results Tests/Robot
 | `AclServiceTests.cs` | 13 | RuleMatches, EvaluateAcl, geração 5 tipos |
 | `StatsServiceTests.cs` | 13 | Aluno, professor, quartis, vazio, tempos |
 | `TcpHandlerTests.cs` | 13 | Mensagens TCP, autenticação, resposta repetida e erros |
+| `DataResetServiceTests.cs` | 3 | Reset seguro de dados locais |
 
 Isolamento:
 - Todos os testes usam pastas temporárias (`Path.GetTempPath`)
@@ -245,6 +278,7 @@ dotnet test Tests/NetLearnBattle.CSharp.Tests.csproj
   dotnet run                          # Aplicação web (porta 5002)
   dotnet run -- tcp-server --host 127.0.0.1 --port 5001
   dotnet run -- tcp-client --host 127.0.0.1 --port 5001
+  dotnet run -- reset-data
   ```
 - O servidor TCP reutiliza o WebApplication builder para aceder aos serviços configurados (JsonService com ContentRootPath correto), evitando um DummyEnvironment frágil
 - **Nota:** O servidor TCP não expõe o CorrectIndex da pergunta, mantendo a integridade académica do jogo

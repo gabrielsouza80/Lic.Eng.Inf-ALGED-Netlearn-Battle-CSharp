@@ -5,7 +5,7 @@
   "robot_output": "Tests/Robot/results",
   "xunit_project": "Tests/NetLearnBattle.CSharp.Tests.csproj",
   "main_project": "NetLearnBattle.CSharp.csproj",
-  "expected_xunit_tests": 103,
+  "expected_xunit_tests": 106,
   "expected_robot_tests": 10,
   "explorer_url": "http://127.0.0.1:5013",
   "explorer_safe_mode": true,

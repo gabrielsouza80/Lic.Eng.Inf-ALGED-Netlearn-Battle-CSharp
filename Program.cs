@@ -5,13 +5,34 @@ var mode = "web";
 var tcpHost = "127.0.0.1";
 var tcpPort = 5001;
 
-// [M03] Lê argumentos para escolher web, tcp-server ou tcp-client.
+// [M03] Lê argumentos para escolher web, tcp-server, tcp-client ou reset-data.
 for (int i = 0; i < args.Length; i++)
 {
     if (args[i] == "--" && i + 1 < args.Length) { mode = args[i + 1]; i++; }
     else if (args[i] == "--host" && i + 1 < args.Length) { tcpHost = args[i + 1]; i++; }
     else if (args[i] == "--port" && i + 1 < args.Length) { tcpPort = int.Parse(args[i + 1]); i++; }
-    else if (i == 0 && args[i] is "tcp-server" or "tcp-client") mode = args[i];
+    else if (i == 0 && args[i] is "tcp-server" or "tcp-client" or "reset-data") mode = args[i];
+}
+
+if (mode == "reset-data")
+{
+    // [M65] Modo de reset: limpa dados locais e encerra sem iniciar o site.
+    var reset = new DataResetService(Path.Combine(Directory.GetCurrentDirectory(), "Data"));
+    var removed = reset.ResetLocalData();
+
+    if (removed.Count == 0)
+    {
+        Console.WriteLine("Nenhum dado local encontrado para remover.");
+    }
+    else
+    {
+        Console.WriteLine("Reset de dados locais concluído.");
+        Console.WriteLine("Ficheiros removidos:");
+        foreach (var file in removed)
+            Console.WriteLine($"* {file}");
+    }
+
+    return;
 }
 
 if (mode == "tcp-client")

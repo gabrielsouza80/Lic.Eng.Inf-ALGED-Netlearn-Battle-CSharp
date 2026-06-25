@@ -3,6 +3,7 @@ Data/users.json
 Data/scores.json
 Data/attempts.json
 Data/sessions.json
+Data/*.tmp
 
 # Logs temporários
 csharp_output*.txt

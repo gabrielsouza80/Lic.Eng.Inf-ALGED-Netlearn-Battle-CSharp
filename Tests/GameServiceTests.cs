@@ -146,6 +146,27 @@ public class GameServiceTests
     }
 
     [Fact]
+    public void InvalidSelectedIndex_DoesNotUpdateScoreOrSaveAttempt()
+    {
+        var (dir, json) = TestHelpers.CreateTempJsonService();
+        try
+        {
+            var scores = new ScoreService(json);
+            var store = new GameSessionStore();
+            var ip = new IpService();
+            var acl = new AclService(json);
+            var game = new GameService(json, scores, store, ip, acl);
+
+            var session = game.StartSession("invalidindex", 1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => game.GradeAnswer(session, 99));
+            Assert.Equal(0, scores.GetScore("invalidindex"));
+            Assert.Empty(json.LoadList<NetLearnBattle.CSharp.Models.Attempt>("attempts.json"));
+        }
+        finally { TestHelpers.Cleanup(dir); }
+    }
+
+    [Fact]
     public void Attempt_ContainsSessionId()
     {
         var (dir, json) = TestHelpers.CreateTempJsonService();

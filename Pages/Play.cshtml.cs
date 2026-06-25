@@ -90,6 +90,8 @@ public class PlayModel : PageModel
             var session = _store.GetSession(sessionIdStr);
             if (session == null || session.Username != username || session.CurrentQuestion == null)
                 return RedirectToPage();
+            if (selectedIndex < 0 || selectedIndex >= session.CurrentQuestion.Options.Count)
+                return RedirectToPage();
 
             var attempt = _game.GradeAnswer(session, selectedIndex);
 

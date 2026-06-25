@@ -39,6 +39,8 @@ public class GameService
     {
         var question = session.CurrentQuestion;
         if (question == null) throw new InvalidOperationException("No current question.");
+        if (selectedIndex < 0 || selectedIndex >= question.Options.Count)
+            throw new ArgumentOutOfRangeException(nameof(selectedIndex), "selectedIndex inválido.");
 
         var isCorrect = selectedIndex == question.CorrectIndex;
         var points = isCorrect ? question.PointsCorrect : question.PointsWrong;

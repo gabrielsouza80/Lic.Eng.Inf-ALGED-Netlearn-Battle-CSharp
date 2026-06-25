@@ -83,4 +83,28 @@ public class JsonServiceTests
         }
         finally { TestHelpers.Cleanup(dir); }
     }
+
+    [Fact]
+    public void LoadList_WhenJsonIsMalformed_ReturnsEmptyList()
+    {
+        var (dir, json) = TestHelpers.CreateTempJsonService();
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "broken.json"), "{ isto nao e json valido");
+            Assert.Empty(json.LoadList<string>("broken.json"));
+        }
+        finally { TestHelpers.Cleanup(dir); }
+    }
+
+    [Fact]
+    public void LoadDictionary_WhenJsonIsMalformed_ReturnsEmptyDictionary()
+    {
+        var (dir, json) = TestHelpers.CreateTempJsonService();
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "broken_scores.json"), "{ isto nao e json valido");
+            Assert.Empty(json.LoadDictionary<int>("broken_scores.json"));
+        }
+        finally { TestHelpers.Cleanup(dir); }
+    }
 }

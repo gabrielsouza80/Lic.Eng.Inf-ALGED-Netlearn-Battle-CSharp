@@ -9,6 +9,13 @@ csharp_output*.txt
 csharp_error*.txt
 csharp_*.txt
 
+# Output local da ferramenta opcional RobotMCP
+tools/robotmcp/output/
+tools/robotmcp/output/*
+__pycache__/
+**/__pycache__/
+*.pyc
+
 # Robot Framework results
 Tests/Robot/results/*
 selenium-screenshot-*.png

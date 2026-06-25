@@ -6,31 +6,57 @@ Migração do projeto NetLearn Battle de Python/Flask para C# com ASP.NET Core R
 
 Requisitos: [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
 
+### Web
+
 ```powershell
-cd NetLearnBattle.CSharp
 dotnet run
 ```
 
 Abrir `http://localhost:5002` no navegador.
 
+### TCP Server
+
+```powershell
+dotnet run -- tcp-server --host 127.0.0.1 --port 5001
+```
+
+### TCP Client
+
+```powershell
+dotnet run -- tcp-client --host 127.0.0.1 --port 5001
+```
+
+### Build
+
+```powershell
+dotnet build
+```
+
 ## Estrutura do projeto
 
 ```
-NetLearnBattle.CSharp/
-├── Models/           # Modelos (User, Question, Attempt, etc.)
-├── Services/         # Lógica (JsonService, AuthService, ScoreService, IpService, AclService, StatsService)
-├── Data/             # Ficheiros JSON
+├── Models/             # Modelos (User, Question, Attempt, etc.)
+├── Services/           # Lógica (JsonService, AuthService, ScoreService, IpService, AclService, StatsService)
+├── Data/               # Ficheiros JSON
 │   ├── acls.json
 │   ├── questions.json
-│   └── examples/     # Modelos de dados (versionados)
-├── Pages/            # Razor Pages
-├── wwwroot/css/      # Estilos
-├── Network/          # Demonstração TCP (TcpServer, TcpClientDemo, TcpMessage)
-└── Program.cs        # Ponto de entrada
-
-NetLearnBattle.CSharp.Tests/
-├── *Tests.cs         # Testes xUnit isolados
-└── TestHelpers.cs    # Criação de dados temporários
+│   └── examples/       # Modelos de dados (versionados)
+├── Pages/              # Razor Pages
+├── wwwroot/css/        # Estilos
+├── Network/            # Demonstração TCP (TcpServer, TcpClientDemo, TcpMessage)
+├── Program.cs          # Ponto de entrada
+├── NetLearnBattle.CSharp.csproj
+├── README.md
+├── .gitignore
+└── Tests/              # Testes
+    ├── *Tests.cs           # Testes xUnit isolados
+    ├── TestHelpers.cs      # Criação de dados temporários
+    ├── NetLearnBattle.CSharp.Tests.csproj
+    └── Robot/              # Testes funcionais Robot Framework
+        ├── resources/
+        │   └── csharp_common.resource
+        ├── *.robot
+        └── results/
 ```
 
 ## Ficheiros de dados
@@ -146,16 +172,16 @@ académica.
 
 Testes funcionais com Robot Framework + Selenium que validam a aplicação web C# em cenários reais:
 
-- `NetLearnBattle.CSharp.Tests/Robot/web_csharp_e2e.robot` — fluxo completo: registo, login, jogar, histórico, estatísticas, ranking, teacher, logout
-- `NetLearnBattle.CSharp.Tests/Robot/web_csharp_session.robot` — sessão de 5 perguntas com resumo
-- `NetLearnBattle.CSharp.Tests/Robot/web_csharp_invalids.robot` — páginas protegidas, login errado, páginas públicas
-- `NetLearnBattle.CSharp.Tests/Robot/web_csharp_persistence.robot` — dados mantêm-se entre sessões
+- `Tests/Robot/web_csharp_e2e.robot` — fluxo completo: registo, login, jogar, histórico, estatísticas, ranking, teacher, logout
+- `Tests/Robot/web_csharp_session.robot` — sessão de 5 perguntas com resumo
+- `Tests/Robot/web_csharp_invalids.robot` — páginas protegidas, login errado, páginas públicas
+- `Tests/Robot/web_csharp_persistence.robot` — dados mantêm-se entre sessões
 
 Os testes:
 - Usam porta **5012** (não conflitua com a app normal na porta 5002)
 - Iniciam a aplicação C# automaticamente com `dotnet run --urls http://127.0.0.1:5012`
 - Usam `resources/csharp_common.resource` com keywords partilhadas
-- Guardam logs em `NetLearnBattle.CSharp.Tests/Robot/results/`
+- Guardam logs em `Tests/Robot/results/`
 
 Pré-requisitos:
 - Python 3 com Robot Framework e SeleniumLibrary instalados
@@ -167,12 +193,12 @@ pip install robotframework selenium robotframework-seleniumlibrary
 
 Executar todos os testes:
 ```powershell
-robot --outputdir NetLearnBattle.CSharp.Tests/Robot/results NetLearnBattle.CSharp.Tests/Robot
+robot --outputdir Tests/Robot/results Tests/Robot
 ```
 
 ### Fase 6 — Testes unitários (concluída)
 
-- Projeto de testes: `NetLearnBattle.CSharp.Tests/` (xUnit)
+- Projeto de testes: `Tests/` (xUnit)
 - Framework: **xUnit** com `Microsoft.NET.Test.Sdk`
 - 100 testes distribuídos por 8 ficheiros, cobrindo todos os serviços:
 
@@ -194,12 +220,11 @@ Isolamento:
 
 Executar:
 ```powershell
-cd NetLearnBattle.CSharp.Tests
 dotnet test
 ```
-ou a partir da raiz:
+ou:
 ```powershell
-dotnet test NetLearnBattle.CSharp.Tests
+dotnet test Tests/NetLearnBattle.CSharp.Tests.csproj
 ```
 
 ### Fase 5 — Demonstração TCP cliente-servidor (concluída)

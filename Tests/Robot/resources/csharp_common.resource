@@ -33,7 +33,7 @@ Mostrar Validação
     Log    [VALIDAR] ${message}
 
 Preparar Caminhos Do Projeto CSharp
-    ${project_dir}=    Evaluate    os.path.abspath(os.path.join(r'''${CURDIR}''', '..', '..', '..', 'NetLearnBattle.CSharp'))    os
+    ${project_dir}=    Evaluate    os.path.abspath(os.path.join(r'''${CURDIR}''', '..', '..', '..'))    os
     Set Suite Variable    ${CSPROJ_DIR}    ${project_dir}
     ${robot_dir}=    Evaluate    os.path.abspath(os.path.join(r'''${CURDIR}''', '..'))    os
     ${results_dir}=    Set Variable    ${robot_dir}${/}results

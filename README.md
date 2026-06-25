@@ -200,14 +200,14 @@ robot --outputdir Tests/Robot/results Tests/Robot
 
 - Projeto de testes: `Tests/` (xUnit)
 - Framework: **xUnit** com `Microsoft.NET.Test.Sdk`
-- 100 testes distribuídos por 8 ficheiros, cobrindo todos os serviços:
+- 103 testes distribuídos por 8 ficheiros, cobrindo todos os serviços:
 
 | Ficheiro | Testes | Cobertura |
 |----------|--------|-----------|
-| `JsonServiceTests.cs` | 6 | Load/Save, ficheiro inexistente, ficheiro vazio, round-trip |
+| `JsonServiceTests.cs` | 8 | Load/Save, ficheiro inexistente, ficheiro vazio, JSON malformado, round-trip |
 | `AuthServiceTests.cs` | 9 | Registo, login, hash, salt, duplicados |
 | `ScoreServiceTests.cs` | 8 | Pontuação, ranking Top 5, sem dados sensíveis |
-| `GameServiceTests.cs` | 11 | Sessão 5 perguntas, Queue, níveis, pontos, tentativas |
+| `GameServiceTests.cs` | 12 | Sessão 5 perguntas, Queue, níveis, pontos, tentativas, selectedIndex inválido |
 | `IpServiceTests.cs` | 25 | IPv4 Network ID, Broadcast, SameNetwork, geração; IPv6 |
 | `AclServiceTests.cs` | 13 | RuleMatches, EvaluateAcl, geração 5 tipos |
 | `StatsServiceTests.cs` | 13 | Aluno, professor, quartis, vazio, tempos |
@@ -271,6 +271,35 @@ dotnet test Tests/NetLearnBattle.CSharp.Tests.csproj
 - A persistência usa JSON; uma base de dados seria mais adequada em produção.
 - O hash com salt é adequado para o âmbito académico, não para segurança profissional.
 - A área do professor é pública nesta versão académica.
+
+## RobotMCP opcional
+
+A pasta `tools/robotmcp/` contém uma ferramenta auxiliar para executar build,
+testes xUnit e Robot Framework, gerando um relatório de avaliação em Markdown.
+
+Comando:
+
+```powershell
+python tools/robotmcp/robotmcp.py
+```
+
+Também existe um modo de exploração segura:
+
+```powershell
+python tools/robotmcp/robotmcp.py --explore
+```
+
+Este modo navega no site com Selenium, clica apenas em ações seguras e gera um
+relatório de possíveis buracos.
+
+O relatório é gerado em:
+
+```text
+tools/robotmcp/output/robotmcp_report.md
+```
+
+Esta ferramenta não é necessária para executar a aplicação; serve apenas para
+apoio à validação antes da entrega.
 
 ## Migração
 

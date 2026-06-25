@@ -1,0 +1,25 @@
+{
+  "project_name": "NetLearn Battle C#",
+  "web_url": "http://127.0.0.1:5012",
+  "robot_path": "Tests/Robot",
+  "robot_output": "Tests/Robot/results",
+  "xunit_project": "Tests/NetLearnBattle.CSharp.Tests.csproj",
+  "main_project": "NetLearnBattle.CSharp.csproj",
+  "expected_xunit_tests": 103,
+  "expected_robot_tests": 10,
+  "explorer_url": "http://127.0.0.1:5013",
+  "explorer_safe_mode": true,
+  "explorer_max_clicks": 80,
+  "explorer_timeout_seconds": 10,
+  "destructive_keywords": [
+    "delete",
+    "remove",
+    "reset",
+    "clear",
+    "apagar",
+    "eliminar",
+    "limpar",
+    "destroy",
+    "drop"
+  ]
+}
